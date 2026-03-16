@@ -1,702 +1,928 @@
-<!DOCTYPE html>
+---
+redirect_from:
+    - /
+---
+
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>草缸开缸日历</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* 色调中性 - 草缸绿 */
-            --color-bg: #F7F9F8;
-            --color-surface: #FFFFFF;
-            --color-text: #1A2118;
-            --color-text-secondary: #5C6860;
-            --color-text-muted: #9AA59C;
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>草缸开缸日历</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Noto+Sans+SC:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                /* 色调中性 - 草缸绿 */
+                --color-bg: #f7f9f8;
+                --color-surface: #ffffff;
+                --color-text: #1a2118;
+                --color-text-secondary: #5c6860;
+                --color-text-muted: #9aa59c;
 
-            /* 强调色 */
-            --color-accent: #2D8A5E;
-            --color-accent-light: #E8F5EE;
-            --color-accent-hover: #247549;
+                /* 强调色 */
+                --color-accent: #2d8a5e;
+                --color-accent-light: #e8f5ee;
+                --color-accent-hover: #247549;
 
-            /* 状态色 */
-            --color-water: #E8734A;
-            --color-water-bg: #FDF3EF;
-            --color-co2: #D4A03D;
-            --color-co2-bg: #FEF9EC;
-            --color-today: #2D8A5E;
-            --color-today-bg: #E8F5EE;
+                /* 状态色 */
+                --color-water: #e8734a;
+                --color-water-bg: #fdf3ef;
+                --color-co2: #d4a03d;
+                --color-co2-bg: #fef9ec;
+                --color-today: #2d8a5e;
+                --color-today-bg: #e8f5ee;
 
-            /* 间距 */
-            --space-xs: 4px;
-            --space-sm: 8px;
-            --space-md: 16px;
-            --space-lg: 24px;
-            --space-xl: 32px;
-            --space-2xl: 48px;
+                /* 间距 */
+                --space-xs: 4px;
+                --space-sm: 8px;
+                --space-md: 16px;
+                --space-lg: 24px;
+                --space-xl: 32px;
+                --space-2xl: 48px;
 
-            /* 圆角 */
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
-        }
+                /* 圆角 */
+                --radius-sm: 6px;
+                --radius-md: 10px;
+                --radius-lg: 16px;
+            }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-        body {
-            font-family: 'DM Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--color-bg);
-            color: var(--color-text);
-            min-height: 100vh;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
+            body {
+                font-family:
+                    "DM Sans",
+                    "Noto Sans SC",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+                background: var(--color-bg);
+                color: var(--color-text);
+                min-height: 100vh;
+                line-height: 1.5;
+                -webkit-font-smoothing: antialiased;
+            }
 
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: var(--space-lg);
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .header-left h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-        }
-
-        .header-left p {
-            font-size: 0.875rem;
-            color: var(--color-text-secondary);
-            margin-top: 2px;
-        }
-
-        .month-nav {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .nav-btn {
-            width: 36px;
-            height: 36px;
-            border: none;
-            background: var(--color-surface);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-text-secondary);
-            transition: all 0.15s ease;
-        }
-
-        .nav-btn:hover {
-            background: var(--color-accent-light);
-            color: var(--color-accent);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: default;
-        }
-
-        .month-label {
-            font-size: 0.9375rem;
-            font-weight: 500;
-            min-width: 90px;
-            text-align: center;
-        }
-
-        /* Calendar */
-        .calendar {
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            margin-bottom: var(--space-lg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-
-        .weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            margin-bottom: var(--space-md);
-        }
-
-        .weekday {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--color-text-muted);
-            text-align: center;
-            padding: var(--space-sm) 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .weekday.weekend {
-            color: var(--color-water);
-        }
-
-        .days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: var(--space-xs);
-        }
-
-        .day {
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.15s ease;
-            position: relative;
-            font-size: 0.9375rem;
-            font-weight: 500;
-            color: var(--color-text);
-            background: transparent;
-            border: none;
-        }
-
-        .day:hover:not(.empty):not(.disabled) {
-            background: var(--color-bg);
-        }
-
-        .day.empty {
-            cursor: default;
-        }
-
-        .day.disabled {
-            color: var(--color-text-muted);
-            opacity: 0.4;
-            cursor: default;
-        }
-
-        .day.today {
-            background: var(--color-today-bg);
-            color: var(--color-accent);
-            font-weight: 600;
-            box-shadow: inset 0 0 0 2px var(--color-accent);
-        }
-
-        .day.has-plan {
-            background: var(--color-accent-light);
-            color: var(--color-accent);
-        }
-
-        .day.has-plan:hover {
-            background: var(--color-accent);
-        }
-
-        /* Markers - 用 ::before 和 ::after 分别显示 */
-        .day.has-water::before {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            top: 6px;
-            left: 6px;
-            background: var(--color-water);
-        }
-
-        .day.has-co2::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            top: 6px;
-            right: 6px;
-            background: var(--color-co2);
-        }
-
-        /* 选中状态 - 保持高对比度 */
-        .day.selected {
-            background: var(--color-text) !important;
-            color: white !important;
-        }
-
-        .day.selected.has-water::before,
-        .day.selected.has-co2::after {
-            background: white;
-        }
-
-        .day-label {
-            font-size: 0.625rem;
-            font-weight: 600;
-            margin-top: 2px;
-            opacity: 0.7;
-        }
-
-        /* Detail Panel */
-        .detail {
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-
-        .detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-lg);
-            padding-bottom: var(--space-md);
-            border-bottom: 1px solid var(--color-bg);
-        }
-
-        .detail-date {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .detail-phase {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--color-accent);
-            background: var(--color-accent-light);
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
-        .detail-items {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-sm) var(--space-md);
-            background: var(--color-bg);
-            border-radius: var(--radius-sm);
-        }
-
-        .detail-label {
-            font-size: 0.8125rem;
-            font-weight: 500;
-            color: var(--color-text-secondary);
-        }
-
-        .detail-value {
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .detail-note {
-            margin-top: var(--space-md);
-            padding: var(--space-md);
-            background: var(--color-water-bg);
-            border-radius: var(--radius-sm);
-            border-left: 3px solid var(--color-water);
-        }
-
-        .detail-note-label {
-            font-size: 0.6875rem;
-            font-weight: 600;
-            color: var(--color-water);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 4px;
-        }
-
-        .detail-note-text {
-            font-size: 0.875rem;
-            color: var(--color-text);
-            line-height: 1.6;
-        }
-
-        /* Legend */
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-lg);
-            margin-top: var(--space-lg);
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-xs);
-            font-size: 0.8125rem;
-            color: var(--color-text-secondary);
-        }
-
-        .legend-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .legend-dot.water { background: var(--color-water); }
-        .legend-dot.co2 { background: var(--color-co2); }
-        .legend-dot.plan { background: var(--color-accent); }
-
-        /* Empty state */
-        .detail-empty {
-            text-align: center;
-            padding: var(--space-xl);
-            color: var(--color-text-muted);
-        }
-
-        .detail-empty svg {
-            width: 48px;
-            height: 48px;
-            margin-bottom: var(--space-md);
-            opacity: 0.4;
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
             .container {
-                padding: var(--space-md);
+                max-width: 720px;
+                margin: 0 auto;
+                padding: var(--space-lg);
             }
 
+            /* Header */
             .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--space-md);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: var(--space-xl);
             }
 
-            .calendar, .detail {
-                padding: var(--space-md);
+            .header-left h1 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+
+            .header-left p {
+                font-size: 0.875rem;
+                color: var(--color-text-secondary);
+                margin-top: 2px;
+            }
+
+            .month-nav {
+                display: flex;
+                align-items: center;
+                gap: var(--space-sm);
+            }
+
+            .nav-btn {
+                width: 36px;
+                height: 36px;
+                border: none;
+                background: var(--color-surface);
+                border-radius: var(--radius-sm);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-text-secondary);
+                transition: all 0.15s ease;
+            }
+
+            .nav-btn:hover {
+                background: var(--color-accent-light);
+                color: var(--color-accent);
+            }
+
+            .nav-btn:disabled {
+                opacity: 0.3;
+                cursor: default;
+            }
+
+            .month-label {
+                font-size: 0.9375rem;
+                font-weight: 500;
+                min-width: 90px;
+                text-align: center;
+            }
+
+            /* Calendar */
+            .calendar {
+                background: var(--color-surface);
+                border-radius: var(--radius-lg);
+                padding: var(--space-lg);
+                margin-bottom: var(--space-lg);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            }
+
+            .weekdays {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                margin-bottom: var(--space-md);
+            }
+
+            .weekday {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: var(--color-text-muted);
+                text-align: center;
+                padding: var(--space-sm) 0;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .weekday.weekend {
+                color: var(--color-water);
+            }
+
+            .days {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: var(--space-xs);
             }
 
             .day {
-                font-size: 0.8125rem;
+                aspect-ratio: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--radius-sm);
+                cursor: pointer;
+                transition: all 0.15s ease;
+                position: relative;
+                font-size: 0.9375rem;
+                font-weight: 500;
+                color: var(--color-text);
+                background: transparent;
+                border: none;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <div class="header-left">
-                <h1>草缸开缸日历</h1>
-                <p>30 天养殖计划</p>
-            </div>
-            <div class="month-nav">
-                <button class="nav-btn" id="prevMonth" aria-label="上个月">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M15 18l-6-6 6-6"/>
+
+            .day:hover:not(.empty):not(.disabled) {
+                background: var(--color-bg);
+            }
+
+            .day.empty {
+                cursor: default;
+            }
+
+            .day.disabled {
+                color: var(--color-text-muted);
+                opacity: 0.4;
+                cursor: default;
+            }
+
+            .day.today {
+                background: var(--color-today-bg);
+                color: var(--color-accent);
+                font-weight: 600;
+                box-shadow: inset 0 0 0 2px var(--color-accent);
+            }
+
+            .day.has-plan {
+                background: var(--color-accent-light);
+                color: var(--color-accent);
+            }
+
+            .day.has-plan:hover {
+                background: var(--color-accent);
+            }
+
+            /* Markers - 用 ::before 和 ::after 分别显示 */
+            .day.has-water::before {
+                content: "";
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                top: 6px;
+                left: 6px;
+                background: var(--color-water);
+            }
+
+            .day.has-co2::after {
+                content: "";
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                top: 6px;
+                right: 6px;
+                background: var(--color-co2);
+            }
+
+            /* 选中状态 - 保持高对比度 */
+            .day.selected {
+                background: var(--color-text) !important;
+                color: white !important;
+            }
+
+            .day.selected.has-water::before,
+            .day.selected.has-co2::after {
+                background: white;
+            }
+
+            .day-label {
+                font-size: 0.625rem;
+                font-weight: 600;
+                margin-top: 2px;
+                opacity: 0.7;
+            }
+
+            /* Detail Panel */
+            .detail {
+                background: var(--color-surface);
+                border-radius: var(--radius-lg);
+                padding: var(--space-lg);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            }
+
+            .detail-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: var(--space-lg);
+                padding-bottom: var(--space-md);
+                border-bottom: 1px solid var(--color-bg);
+            }
+
+            .detail-date {
+                font-size: 1.25rem;
+                font-weight: 600;
+            }
+
+            .detail-phase {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: var(--color-accent);
+                background: var(--color-accent-light);
+                padding: 4px 10px;
+                border-radius: 20px;
+            }
+
+            .detail-items {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+
+            .detail-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: var(--space-sm) var(--space-md);
+                background: var(--color-bg);
+                border-radius: var(--radius-sm);
+            }
+
+            .detail-label {
+                font-size: 0.8125rem;
+                font-weight: 500;
+                color: var(--color-text-secondary);
+            }
+
+            .detail-value {
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
+
+            .detail-note {
+                margin-top: var(--space-md);
+                padding: var(--space-md);
+                background: var(--color-water-bg);
+                border-radius: var(--radius-sm);
+                border-left: 3px solid var(--color-water);
+            }
+
+            .detail-note-label {
+                font-size: 0.6875rem;
+                font-weight: 600;
+                color: var(--color-water);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 4px;
+            }
+
+            .detail-note-text {
+                font-size: 0.875rem;
+                color: var(--color-text);
+                line-height: 1.6;
+            }
+
+            /* Legend */
+            .legend {
+                display: flex;
+                justify-content: center;
+                gap: var(--space-lg);
+                margin-top: var(--space-lg);
+                flex-wrap: wrap;
+            }
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: var(--space-xs);
+                font-size: 0.8125rem;
+                color: var(--color-text-secondary);
+            }
+
+            .legend-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+            }
+
+            .legend-dot.water {
+                background: var(--color-water);
+            }
+            .legend-dot.co2 {
+                background: var(--color-co2);
+            }
+            .legend-dot.plan {
+                background: var(--color-accent);
+            }
+
+            /* Empty state */
+            .detail-empty {
+                text-align: center;
+                padding: var(--space-xl);
+                color: var(--color-text-muted);
+            }
+
+            .detail-empty svg {
+                width: 48px;
+                height: 48px;
+                margin-bottom: var(--space-md);
+                opacity: 0.4;
+            }
+
+            /* Responsive */
+            @media (max-width: 480px) {
+                .container {
+                    padding: var(--space-md);
+                }
+
+                .header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: var(--space-md);
+                }
+
+                .calendar,
+                .detail {
+                    padding: var(--space-md);
+                }
+
+                .day {
+                    font-size: 0.8125rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header class="header">
+                <div class="header-left">
+                    <h1>草缸开缸日历</h1>
+                    <p>30 天养殖计划</p>
+                </div>
+                <div class="month-nav">
+                    <button class="nav-btn" id="prevMonth" aria-label="上个月">
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                    </button>
+                    <span class="month-label" id="monthLabel">2026/03</span>
+                    <button class="nav-btn" id="nextMonth" aria-label="下个月">
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M9 18l6-6-6-6" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <section class="calendar">
+                <div class="weekdays">
+                    <div class="weekday">一</div>
+                    <div class="weekday">二</div>
+                    <div class="weekday">三</div>
+                    <div class="weekday">四</div>
+                    <div class="weekday">五</div>
+                    <div class="weekday weekend">六</div>
+                    <div class="weekday weekend">日</div>
+                </div>
+                <div class="days" id="daysGrid"></div>
+            </section>
+
+            <section class="detail" id="detailPanel">
+                <div class="detail-empty" id="detailEmpty">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                    >
+                        <rect
+                            x="3"
+                            y="4"
+                            width="18"
+                            height="18"
+                            rx="2"
+                            ry="2"
+                        />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
-                </button>
-                <span class="month-label" id="monthLabel">2026/03</span>
-                <button class="nav-btn" id="nextMonth" aria-label="下个月">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-            </div>
-        </header>
+                    <p>选择日期查看任务</p>
+                </div>
+                <div id="detailContent" style="display: none"></div>
+            </section>
 
-        <section class="calendar">
-            <div class="weekdays">
-                <div class="weekday">一</div>
-                <div class="weekday">二</div>
-                <div class="weekday">三</div>
-                <div class="weekday">四</div>
-                <div class="weekday">五</div>
-                <div class="weekday weekend">六</div>
-                <div class="weekday weekend">日</div>
-            </div>
-            <div class="days" id="daysGrid"></div>
-        </section>
-
-        <section class="detail" id="detailPanel">
-            <div class="detail-empty" id="detailEmpty">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                </svg>
-                <p>选择日期查看任务</p>
-            </div>
-            <div id="detailContent" style="display: none;"></div>
-        </section>
-
-        <div class="legend">
-            <div class="legend-item">
-                <span class="legend-dot plan"></span>
-                <span>有计划</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot water"></span>
-                <span>换水</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot co2"></span>
-                <span>开 CO2</span>
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-dot plan"></span>
+                    <span>有计划</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot water"></span>
+                    <span>换水</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot co2"></span>
+                    <span>开 CO2</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        const waterDays = ['3-9','3-10','3-11','3-12','3-14','3-16','3-18','3-20','3-22','3-23','3-26','3-29','3-30','4-2','4-5'];
-        const co2Days = ['3-23','3-24','3-25','3-26','3-27','3-28','3-29','3-30','3-31','4-1','4-2','4-3','4-4','4-5','4-6','4-7'];
+        <script>
+            const waterDays = [
+                "3-9",
+                "3-10",
+                "3-11",
+                "3-12",
+                "3-14",
+                "3-16",
+                "3-18",
+                "3-20",
+                "3-22",
+                "3-23",
+                "3-26",
+                "3-29",
+                "3-30",
+                "4-2",
+                "4-5",
+            ];
+            const co2Days = [
+                "3-23",
+                "3-24",
+                "3-25",
+                "3-26",
+                "3-27",
+                "3-28",
+                "3-29",
+                "3-30",
+                "3-31",
+                "4-1",
+                "4-2",
+                "4-3",
+                "4-4",
+                "4-5",
+                "4-6",
+                "4-7",
+            ];
 
-        const plans = {
-            '3-8': { phase: '开缸日', items: [
-                { label: '底床', value: '尼特利2代铺4cm' },
-                { label: '种植', value: '前：中：后：分布' },
-                { label: '加水', value: '沿缸壁缓慢加满' },
-                { label: '灯光', value: '全程关闭' },
-                { label: 'CO2', value: '关闭' }
-            ], note: '水浑不管，过滤开一晚清澈' },
-            '3-9': { phase: 'Day1', items: [
-                { label: '灯光', value: '关闭' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '不喂鱼、不拔水草' },
-            '3-10': { phase: 'Day2', items: [
-                { label: '灯光', value: '关闭' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '菌膜浑水不用管' },
-            '3-11': { phase: 'Day3', items: [
-                { label: '灯光', value: '关闭' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '稳水期' },
-            '3-12': { phase: 'Day4', items: [
-                { label: '灯光', value: '1小时' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '时段固定后不改' },
-            '3-13': { phase: 'Day5', items: [
-                { label: '灯光', value: '1小时' },
-                { label: 'CO2', value: '关闭' }
-            ], note: '禁喂鱼虾' },
-            '3-14': { phase: 'Day6', items: [
-                { label: '灯光', value: '1小时' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '不拔动水草' },
-            '3-15': { phase: 'Day7', items: [
-                { label: '灯光', value: '1小时' },
-                { label: 'CO2', value: '关闭' }
-            ], note: '转水适应期' },
-            '3-16': { phase: 'Day8', items: [
-                { label: '灯光', value: '1.5小时' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '缓苗扎根关键期' },
-            '3-17': { phase: 'Day9', items: [
-                { label: '灯光', value: '1.5小时' },
-                { label: 'CO2', value: '关闭' }
-            ], note: '融叶剪掉即可' },
-            '3-18': { phase: 'Day10', items: [
-                { label: '灯光', value: '1.5小时' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '禁喂肥' },
-            '3-19': { phase: 'Day11', items: [
-                { label: '灯光', value: '1.5小时' },
-                { label: 'CO2', value: '关闭' }
-            ], note: '飘起固定' },
-            '3-20': { phase: 'Day12', items: [
-                { label: '灯光', value: '1.5小时' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '第2周' },
-            '3-21': { phase: 'Day13', items: [
-                { label: '灯光', value: '1.5小时' },
-                { label: 'CO2', value: '关闭' }
-            ], note: '继续稳水' },
-            '3-22': { phase: 'Day14', items: [
-                { label: '灯光', value: '1.5小时' },
-                { label: 'CO2', value: '关闭' },
-                { label: '换水', value: '1/4' }
-            ], note: '第2周结束' },
-            '3-23': { phase: 'Day15', items: [
-                { label: '灯光', value: '2.5小时' },
-                { label: 'CO2', value: '3秒1泡' },
-                { label: '换水', value: '1/4' }
-            ], note: '首次开CO2，注意鱼虾' },
-            '3-24': { phase: 'Day16', items: [
-                { label: '灯光', value: '2.5小时' },
-                { label: 'CO2', value: '3秒1泡' }
-            ], note: '后景草徒长快' },
-            '3-25': { phase: 'Day17', items: [
-                { label: '灯光', value: '2.5小时' },
-                { label: 'CO2', value: '3秒1泡' }
-            ], note: '8cm立刻打头' },
-            '3-26': { phase: 'Day18', items: [
-                { label: '灯光', value: '2.5小时' },
-                { label: 'CO2', value: '3秒1泡' },
-                { label: '换水', value: '1/4' }
-            ], note: '可极少量喂' },
-            '3-27': { phase: 'Day19', items: [
-                { label: '灯光', value: '2.5小时' },
-                { label: 'CO2', value: '3秒1泡' }
-            ], note: '有藻减30分钟' },
-            '3-28': { phase: 'Day20', items: [
-                { label: '灯光', value: '2.5小时' },
-                { label: 'CO2', value: '3秒1泡' }
-            ], note: '第3周' },
-            '3-29': { phase: 'Day21', items: [
-                { label: '灯光', value: '2.5小时' },
-                { label: 'CO2', value: '3秒1泡' },
-                { label: '换水', value: '1/4' }
-            ], note: '第3周结束' },
-            '3-30': { phase: 'Day22', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' },
-                { label: '换水', value: '1/4' }
-            ], note: '封顶时长' },
-            '3-31': { phase: 'Day23', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' }
-            ], note: '检查草高' },
-            '4-1': { phase: 'Day24', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' }
-            ], note: '及时打头' },
-            '4-2': { phase: 'Day25', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' },
-                { label: '换水', value: '1/4' }
-            ], note: '第4周' },
-            '4-3': { phase: 'Day26', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' }
-            ], note: '全程禁肥' },
-            '4-4': { phase: 'Day27', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' }
-            ], note: '严控喂食' },
-            '4-5': { phase: 'Day28', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' },
-                { label: '换水', value: '1/4' }
-            ], note: '接近满月' },
-            '4-6': { phase: 'Day29', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' }
-            ], note: '满月倒计时' },
-            '4-7': { phase: 'Day30', items: [
-                { label: '灯光', value: '3小时' },
-                { label: 'CO2', value: '2.5-3秒1泡' },
-                { label: '换水', value: '每周1/3' }
-            ], note: '满月，进入维护' }
-        };
+            const plans = {
+                "3-8": {
+                    phase: "开缸日",
+                    items: [
+                        { label: "底床", value: "尼特利2代铺4cm" },
+                        { label: "种植", value: "前：中：后：分布" },
+                        { label: "加水", value: "沿缸壁缓慢加满" },
+                        { label: "灯光", value: "全程关闭" },
+                        { label: "CO2", value: "关闭" },
+                    ],
+                    note: "水浑不管，过滤开一晚清澈",
+                },
+                "3-9": {
+                    phase: "Day1",
+                    items: [
+                        { label: "灯光", value: "关闭" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "不喂鱼、不拔水草",
+                },
+                "3-10": {
+                    phase: "Day2",
+                    items: [
+                        { label: "灯光", value: "关闭" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "菌膜浑水不用管",
+                },
+                "3-11": {
+                    phase: "Day3",
+                    items: [
+                        { label: "灯光", value: "关闭" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "稳水期",
+                },
+                "3-12": {
+                    phase: "Day4",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "时段固定后不改",
+                },
+                "3-13": {
+                    phase: "Day5",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO2", value: "关闭" },
+                    ],
+                    note: "禁喂鱼虾",
+                },
+                "3-14": {
+                    phase: "Day6",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "不拔动水草",
+                },
+                "3-15": {
+                    phase: "Day7",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO2", value: "关闭" },
+                    ],
+                    note: "转水适应期",
+                },
+                "3-16": {
+                    phase: "Day8",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "缓苗扎根关键期",
+                },
+                "3-17": {
+                    phase: "Day9",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO2", value: "关闭" },
+                    ],
+                    note: "融叶剪掉即可",
+                },
+                "3-18": {
+                    phase: "Day10",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "禁喂肥",
+                },
+                "3-19": {
+                    phase: "Day11",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO2", value: "关闭" },
+                    ],
+                    note: "飘起固定",
+                },
+                "3-20": {
+                    phase: "Day12",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第2周",
+                },
+                "3-21": {
+                    phase: "Day13",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO2", value: "关闭" },
+                    ],
+                    note: "继续稳水",
+                },
+                "3-22": {
+                    phase: "Day14",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO2", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第2周结束",
+                },
+                "3-23": {
+                    phase: "Day15",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO2", value: "3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "首次开CO2，注意鱼虾",
+                },
+                "3-24": {
+                    phase: "Day16",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO2", value: "3秒1泡" },
+                    ],
+                    note: "后景草徒长快",
+                },
+                "3-25": {
+                    phase: "Day17",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO2", value: "3秒1泡" },
+                    ],
+                    note: "8cm立刻打头",
+                },
+                "3-26": {
+                    phase: "Day18",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO2", value: "3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "可极少量喂",
+                },
+                "3-27": {
+                    phase: "Day19",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO2", value: "3秒1泡" },
+                    ],
+                    note: "有藻减30分钟",
+                },
+                "3-28": {
+                    phase: "Day20",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO2", value: "3秒1泡" },
+                    ],
+                    note: "第3周",
+                },
+                "3-29": {
+                    phase: "Day21",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO2", value: "3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第3周结束",
+                },
+                "3-30": {
+                    phase: "Day22",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "封顶时长",
+                },
+                "3-31": {
+                    phase: "Day23",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                    ],
+                    note: "检查草高",
+                },
+                "4-1": {
+                    phase: "Day24",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                    ],
+                    note: "及时打头",
+                },
+                "4-2": {
+                    phase: "Day25",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第4周",
+                },
+                "4-3": {
+                    phase: "Day26",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                    ],
+                    note: "全程禁肥",
+                },
+                "4-4": {
+                    phase: "Day27",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                    ],
+                    note: "严控喂食",
+                },
+                "4-5": {
+                    phase: "Day28",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "接近满月",
+                },
+                "4-6": {
+                    phase: "Day29",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                    ],
+                    note: "满月倒计时",
+                },
+                "4-7": {
+                    phase: "Day30",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO2", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "每周1/3" },
+                    ],
+                    note: "满月，进入维护",
+                },
+            };
 
-        let currentMonth = 2; // 0-indexed
-        let currentYear = 2026;
-        let selectedDate = null;
+            let currentMonth = 2; // 0-indexed
+            let currentYear = 2026;
+            let selectedDate = null;
 
-        function getDayLabel(month, day) {
-            if (month === 3 && day >= 8) return `D${day - 7}`;
-            if (month === 4 && day <= 7) return `D${day + 23}`;
-            return '';
-        }
-
-        function renderCalendar() {
-            const grid = document.getElementById('daysGrid');
-            const monthLabel = document.getElementById('monthLabel');
-            const prevBtn = document.getElementById('prevMonth');
-            const nextBtn = document.getElementById('nextMonth');
-
-            monthLabel.textContent = `${currentYear}/${String(currentMonth + 1).padStart(2, '0')}`;
-
-            prevBtn.disabled = currentMonth < 2;
-            nextBtn.disabled = currentMonth > 3;
-
-            const firstDayRaw = new Date(currentYear, currentMonth, 1).getDay();
-            const firstDay = firstDayRaw === 0 ? 6 : firstDayRaw - 1;
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            const today = new Date();
-
-            let html = '';
-
-            // Empty cells
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div class="day empty"></div>';
+            function getDayLabel(month, day) {
+                if (month === 3 && day >= 8) return `D${day - 7}`;
+                if (month === 4 && day <= 7) return `D${day + 23}`;
+                return "";
             }
 
-            // Days
-            for (let day = 1; day <= daysInMonth; day++) {
-                const key = `${currentMonth + 1}-${day}`;
-                const hasPlan = plans[key];
-                const hasWater = waterDays.includes(key);
-                const hasCo2 = co2Days.includes(key);
-                const isToday = currentMonth === today.getMonth() && currentYear === today.getFullYear() && day === today.getDate();
-                const isSelected = selectedDate && currentMonth + 1 === selectedDate.month && day === selectedDate.day;
-                const isDisabled = !hasPlan;
+            function renderCalendar() {
+                const grid = document.getElementById("daysGrid");
+                const monthLabel = document.getElementById("monthLabel");
+                const prevBtn = document.getElementById("prevMonth");
+                const nextBtn = document.getElementById("nextMonth");
 
-                let classes = ['day'];
-                if (hasPlan) classes.push('has-plan');
-                if (hasWater) classes.push('has-water');
-                if (hasCo2) classes.push('has-co2');
-                if (isToday) classes.push('today');
-                if (isSelected) classes.push('selected');
-                if (isDisabled) classes.push('disabled');
+                monthLabel.textContent = `${currentYear}/${String(currentMonth + 1).padStart(2, "0")}`;
 
-                const label = getDayLabel(currentMonth + 1, day);
+                prevBtn.disabled = currentMonth < 2;
+                nextBtn.disabled = currentMonth > 3;
 
-                html += `
-                    <button class="${classes.join(' ')}" data-month="${currentMonth + 1}" data-day="${day}" ${isDisabled ? 'disabled' : ''}>
+                const firstDayRaw = new Date(
+                    currentYear,
+                    currentMonth,
+                    1,
+                ).getDay();
+                const firstDay = firstDayRaw === 0 ? 6 : firstDayRaw - 1;
+                const daysInMonth = new Date(
+                    currentYear,
+                    currentMonth + 1,
+                    0,
+                ).getDate();
+                const today = new Date();
+
+                let html = "";
+
+                // Empty cells
+                for (let i = 0; i < firstDay; i++) {
+                    html += '<div class="day empty"></div>';
+                }
+
+                // Days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const key = `${currentMonth + 1}-${day}`;
+                    const hasPlan = plans[key];
+                    const hasWater = waterDays.includes(key);
+                    const hasCo2 = co2Days.includes(key);
+                    const isToday =
+                        currentMonth === today.getMonth() &&
+                        currentYear === today.getFullYear() &&
+                        day === today.getDate();
+                    const isSelected =
+                        selectedDate &&
+                        currentMonth + 1 === selectedDate.month &&
+                        day === selectedDate.day;
+                    const isDisabled = !hasPlan;
+
+                    let classes = ["day"];
+                    if (hasPlan) classes.push("has-plan");
+                    if (hasWater) classes.push("has-water");
+                    if (hasCo2) classes.push("has-co2");
+                    if (isToday) classes.push("today");
+                    if (isSelected) classes.push("selected");
+                    if (isDisabled) classes.push("disabled");
+
+                    const label = getDayLabel(currentMonth + 1, day);
+
+                    html += `
+                    <button class="${classes.join(" ")}" data-month="${currentMonth + 1}" data-day="${day}" ${isDisabled ? "disabled" : ""}>
                         ${day}
-                        ${label ? `<span class="day-label">${label}</span>` : ''}
+                        ${label ? `<span class="day-label">${label}</span>` : ""}
                     </button>
                 `;
-            }
+                }
 
-            grid.innerHTML = html;
+                grid.innerHTML = html;
 
-            // Click handlers
-            grid.querySelectorAll('.day:not(.empty):not(.disabled)').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const month = parseInt(btn.dataset.month);
-                    const day = parseInt(btn.dataset.day);
-                    selectDate(month, day);
+                // Click handlers
+                grid.querySelectorAll(
+                    ".day:not(.empty):not(.disabled)",
+                ).forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        const month = parseInt(btn.dataset.month);
+                        const day = parseInt(btn.dataset.day);
+                        selectDate(month, day);
+                    });
                 });
-            });
-        }
-
-        function selectDate(month, day) {
-            selectedDate = { month, day };
-            renderCalendar();
-            showDetail(month, day);
-        }
-
-        function showDetail(month, day) {
-            const key = `${month}-${day}`;
-            const plan = plans[key];
-
-            const emptyEl = document.getElementById('detailEmpty');
-            const contentEl = document.getElementById('detailContent');
-
-            if (!plan) {
-                emptyEl.style.display = 'block';
-                contentEl.style.display = 'none';
-                return;
             }
 
-            emptyEl.style.display = 'none';
-            contentEl.style.display = 'block';
+            function selectDate(month, day) {
+                selectedDate = { month, day };
+                renderCalendar();
+                showDetail(month, day);
+            }
 
-            let html = `
+            function showDetail(month, day) {
+                const key = `${month}-${day}`;
+                const plan = plans[key];
+
+                const emptyEl = document.getElementById("detailEmpty");
+                const contentEl = document.getElementById("detailContent");
+
+                if (!plan) {
+                    emptyEl.style.display = "block";
+                    contentEl.style.display = "none";
+                    return;
+                }
+
+                emptyEl.style.display = "none";
+                contentEl.style.display = "block";
+
+                let html = `
                 <div class="detail-header">
                     <span class="detail-date">${month}月${day}日</span>
                     <span class="detail-phase">${plan.phase}</span>
@@ -704,50 +930,57 @@
                 <div class="detail-items">
             `;
 
-            plan.items.forEach(item => {
-                html += `
+                plan.items.forEach((item) => {
+                    html += `
                     <div class="detail-row">
                         <span class="detail-label">${item.label}</span>
                         <span class="detail-value">${item.value}</span>
                     </div>
                 `;
-            });
+                });
 
-            html += '</div>';
+                html += "</div>";
 
-            if (plan.note) {
-                html += `
+                if (plan.note) {
+                    html += `
                     <div class="detail-note">
                         <div class="detail-note-label">Note</div>
                         <div class="detail-note-text">${plan.note}</div>
                     </div>
                 `;
+                }
+
+                contentEl.innerHTML = html;
             }
 
-            contentEl.innerHTML = html;
-        }
+            // Event listeners
+            document
+                .getElementById("prevMonth")
+                .addEventListener("click", () => {
+                    if (currentMonth > 2) {
+                        currentMonth--;
+                        renderCalendar();
+                    }
+                });
 
-        // Event listeners
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            if (currentMonth > 2) {
-                currentMonth--;
-                renderCalendar();
-            }
-        });
+            document
+                .getElementById("nextMonth")
+                .addEventListener("click", () => {
+                    if (currentMonth < 3) {
+                        currentMonth++;
+                        renderCalendar();
+                    }
+                });
 
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            if (currentMonth < 3) {
-                currentMonth++;
-                renderCalendar();
-            }
-        });
-
-        // Init
-        const today = new Date();
-        currentMonth = today.getMonth();
-        selectedDate = { month: today.getMonth() + 1, day: today.getDate() };
-        renderCalendar();
-        showDetail(selectedDate.month, selectedDate.day);
-    </script>
-</body>
+            // Init
+            const today = new Date();
+            currentMonth = today.getMonth();
+            selectedDate = {
+                month: today.getMonth() + 1,
+                day: today.getDate(),
+            };
+            renderCalendar();
+            showDetail(selectedDate.month, selectedDate.day);
+        </script>
+    </body>
 </html>

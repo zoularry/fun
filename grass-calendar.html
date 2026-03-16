@@ -1,871 +1,1139 @@
-<!DOCTYPE html>
+---
+redirect_from:
+    - /grass
+    - /grass/
+---
+
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>草缸开缸日历 | Aquarium Calendar</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* Casing Colors */
-            --casing-bg: #E3E4DF;
-            --casing-highlight: rgba(255,255,255,0.7);
-            --casing-shadow: rgba(0,0,0,0.08);
-            --panel-gap-dark: rgba(0,0,0,0.15);
-            --panel-gap-light: rgba(255,255,255,0.8);
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>草缸开缸日历 | Aquarium Calendar</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                /* Casing Colors */
+                --casing-bg: #e3e4df;
+                --casing-highlight: rgba(255, 255, 255, 0.7);
+                --casing-shadow: rgba(0, 0, 0, 0.08);
+                --panel-gap-dark: rgba(0, 0, 0, 0.15);
+                --panel-gap-light: rgba(255, 255, 255, 0.8);
 
-            /* Text */
-            --text-main: #1A1A1A;
-            --text-muted: #555555;
-            --text-label: #6A6B66;
+                /* Text */
+                --text-main: #1a1a1a;
+                --text-muted: #555555;
+                --text-label: #6a6b66;
 
-            /* Hole/Background */
-            --hole-fill: #1C1C1A;
+                /* Hole/Background */
+                --hole-fill: #1c1c1a;
 
-            /* Accent Colors - Aquarium Theme */
-            --color-cyan: #00A5A5;
-            --shade-cyan: #007A7A;
-            --color-teal: #2D8A7B;
-            --shade-teal: #1F6356;
-            --color-coral: #E07A5F;
-            --shade-coral: #A85642;
-            --color-amber: #D4A03D;
-            --shade-amber: #9A7429;
-            --color-aqua: #5CB8A0;
-            --shade-aqua: #3D8570;
-        }
+                /* Accent Colors - Aquarium Theme */
+                --color-cyan: #00a5a5;
+                --shade-cyan: #007a7a;
+                --color-teal: #2d8a7b;
+                --shade-teal: #1f6356;
+                --color-coral: #e07a5f;
+                --shade-coral: #a85642;
+                --color-amber: #d4a03d;
+                --shade-amber: #9a7429;
+                --color-aqua: #5cb8a0;
+                --shade-aqua: #3d8570;
+            }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        body {
-            background-color: #C8C9C4;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            font-family: 'Noto Sans SC', 'JetBrains Mono', sans-serif;
-            color: var(--text-main);
-            padding: 20px;
-        }
-
-        /* Main Device Panel */
-        .device-panel {
-            background-color: var(--casing-bg);
-            width: 100%;
-            max-width: 900px;
-            border-radius: 12px;
-            position: relative;
-            box-shadow:
-                0 20px 50px rgba(0,0,0,0.15),
-                0 5px 15px rgba(0,0,0,0.05),
-                inset 1px 1px 2px var(--casing-highlight),
-                inset -1px -1px 3px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* Panel Header */
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px 40px 20px;
-        }
-
-        .brand {
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-        }
-
-        .model-number {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 12px;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-
-        /* Hero Section - Calendar Grid */
-        .hero-section {
-            display: flex;
-            justify-content: center;
-            padding: 20px 40px 30px;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .weekday-header {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-label);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            text-align: center;
-            padding: 8px 0;
-        }
-
-        .weekday-header.weekend {
-            color: var(--color-coral);
-        }
-
-        .day-cell {
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            background: #DADBD4;
-            box-shadow:
-                inset 2px 2px 4px rgba(0,0,0,0.08),
-                inset -2px -2px 4px rgba(255,255,255,0.7);
-            cursor: pointer;
-            transition: all 0.15s cubic-bezier(0.25, 1, 0.5, 1);
-            position: relative;
-            min-height: 48px;
-        }
-
-        .day-cell:hover:not(.empty):not(.disabled) {
-            background: #D0D1CC;
-        }
-
-        .day-cell.empty {
-            background: transparent;
-            box-shadow: none;
-            cursor: default;
-        }
-
-        .day-cell.disabled {
-            opacity: 0.3;
-            cursor: default;
-        }
-
-        .day-cell.has-plan {
-            background: linear-gradient(135deg, var(--color-teal), var(--shade-teal));
-            color: white;
-            box-shadow:
-                0 3px 0 var(--shade-teal),
-                0 5px 8px rgba(0,0,0,0.2),
-                inset 0 1px 1px rgba(255,255,255,0.2);
-        }
-
-        .day-cell.has-plan:active {
-            transform: translateY(2px);
-            box-shadow:
-                0 1px 0 var(--shade-teal),
-                0 2px 3px rgba(0,0,0,0.15),
-                inset 0 1px 1px rgba(255,255,255,0.2);
-        }
-
-        .day-cell.selected {
-            background: linear-gradient(135deg, var(--color-cyan), var(--shade-cyan));
-            color: white;
-            box-shadow:
-                0 3px 0 var(--shade-cyan),
-                0 5px 12px rgba(0,165,165,0.4),
-                inset 0 1px 1px rgba(255,255,255,0.3);
-        }
-
-        .day-cell.selected:active {
-            transform: translateY(2px);
-            box-shadow:
-                0 1px 0 var(--shade-cyan),
-                0 2px 4px rgba(0,165,165,0.3),
-                inset 0 1px 1px rgba(255,255,255,0.3);
-        }
-
-        .day-number {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            line-height: 1;
-        }
-
-        .day-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 8px;
-            font-weight: 500;
-            margin-top: 2px;
-            opacity: 0.8;
-        }
-
-        /* Markers */
-        .day-cell.has-water::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 6px;
-            height: 6px;
-            background: #FF6B4A;
-            border-radius: 50%;
-            box-shadow: 0 0 4px #FF6B4A;
-        }
-
-        .day-cell.has-co2::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            right: 3px;
-            width: 6px;
-            height: 6px;
-            background: var(--color-amber);
-            border-radius: 50%;
-            box-shadow: 0 0 4px var(--color-amber);
-        }
-
-        /* Today highlight - 硬件风格一致 */
-        .day-cell.today {
-            background: linear-gradient(145deg, #3A9A8A, #2D8A7B);
-            box-shadow:
-                0 4px 0 #1F6356,
-                0 6px 10px rgba(0,0,0,0.25),
-                inset 0 1px 1px rgba(255,255,255,0.3);
-            border: 2px solid var(--color-cyan);
-        }
-
-        .day-cell.today .day-number {
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-
-        .day-cell.today .day-label {
-            color: rgba(255,255,255,0.9);
-        }
-
-        /* Month Navigation Controls */
-        .controls-section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 10px 0 30px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .control-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-label);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .hardware-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-well {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #DADBD4;
-            box-shadow:
-                inset 2px 2px 4px rgba(0,0,0,0.1),
-                inset -2px -2px 4px rgba(255,255,255,0.7);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .btn-cap {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            position: absolute;
-            top: -2px;
-            background-color: var(--btn-color, var(--color-teal));
-            box-shadow:
-                inset 0 2px 2px rgba(255,255,255,0.4),
-                inset 0 -1px 3px rgba(0,0,0,0.2),
-                0 4px 0 var(--btn-shade, var(--shade-teal)),
-                0 6px 6px rgba(0,0,0,0.2);
-            transition: all 0.08s cubic-bezier(0.25, 1, 0.5, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-        }
-
-        .hardware-btn:active .btn-cap,
-        .hardware-btn.is-active .btn-cap {
-            top: 2px;
-            box-shadow:
-                inset 0 1px 2px rgba(255,255,255,0.3),
-                inset 0 -1px 2px rgba(0,0,0,0.3),
-                0 0px 0 var(--btn-shade, var(--shade-teal)),
-                0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .month-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            min-width: 100px;
-            text-align: center;
-        }
-
-        /* Panel Divider */
-        .panel-divider {
-            height: 2px;
-            width: 100%;
-            background: var(--panel-gap-dark);
-            border-bottom: 1px solid var(--panel-gap-light);
-        }
-
-        /* Detail Section */
-        .detail-section {
-            padding: 30px 40px 40px;
-            background: rgba(255,255,255,0.1);
-        }
-
-        .detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .detail-date {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .detail-phase {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--color-cyan);
-            padding: 6px 12px;
-            background: rgba(0,165,165,0.15);
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            background: #E8E8E4;
-            border-radius: 6px;
-            border: 1px solid rgba(0,0,0,0.05);
-            border-top-color: rgba(255,255,255,0.8);
-            border-left-color: rgba(255,255,255,0.8);
-        }
-
-        .detail-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--color-coral);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            min-width: 40px;
-        }
-
-        .detail-value {
-            font-family: 'Noto Sans SC', sans-serif;
-            font-size: 13px;
-            color: var(--text-main);
-        }
-
-        .detail-note {
-            margin-top: 16px;
-            padding: 12px 16px;
-            background: rgba(224, 122, 95, 0.12);
-            border-radius: 6px;
-            border-left: 3px solid var(--color-coral);
-        }
-
-        .detail-note-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 9px;
-            font-weight: 700;
-            color: var(--color-coral);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 4px;
-        }
-
-        .detail-note-text {
-            font-family: 'Noto Sans SC', sans-serif;
-            font-size: 13px;
-            color: var(--text-main);
-            line-height: 1.5;
-        }
-
-        /* Legend */
-        .legend-section {
-            padding: 20px 40px;
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .legend-dot.plan {
-            background: var(--color-teal);
-            box-shadow: 0 0 6px var(--color-teal);
-        }
-
-        .legend-dot.water {
-            background: #FF6B4A;
-            box-shadow: 0 0 6px #FF6B4A;
-        }
-
-        .legend-dot.co2 {
-            background: var(--color-amber);
-            box-shadow: 0 0 6px var(--color-amber);
-        }
-
-        /* Footer */
-        .panel-footer {
-            padding: 0 40px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .footer-text {
-            font-weight: 500;
-            font-size: 14px;
-            letter-spacing: -0.02em;
-        }
-
-        .footer-specs {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: var(--text-muted);
-            text-align: right;
-            line-height: 1.6;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 600px) {
-            .device-panel {
-                border-radius: 0;
+            * {
+                box-sizing: border-box;
                 margin: 0;
+                padding: 0;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
             }
 
             body {
-                padding: 0;
-                background: var(--casing-bg);
+                background-color: #c8c9c4;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                min-height: 100vh;
+                font-family: "Noto Sans SC", "JetBrains Mono", sans-serif;
+                color: var(--text-main);
+                padding: 20px;
             }
 
-            .panel-header,
-            .hero-section,
-            .detail-section,
-            .legend-section,
-            .panel-footer {
-                padding-left: 20px;
-                padding-right: 20px;
+            /* Main Device Panel */
+            .device-panel {
+                background-color: var(--casing-bg);
+                width: 100%;
+                max-width: 900px;
+                border-radius: 12px;
+                position: relative;
+                box-shadow:
+                    0 20px 50px rgba(0, 0, 0, 0.15),
+                    0 5px 15px rgba(0, 0, 0, 0.05),
+                    inset 1px 1px 2px var(--casing-highlight),
+                    inset -1px -1px 3px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            /* Panel Header */
+            .panel-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 30px 40px 20px;
+            }
+
+            .brand {
+                font-weight: 600;
+                font-size: 14px;
+                letter-spacing: -0.02em;
+                color: var(--text-main);
+            }
+
+            .model-number {
+                font-family: "JetBrains Mono", monospace;
+                font-weight: 700;
+                font-size: 12px;
+                color: var(--text-muted);
+                letter-spacing: 0.05em;
+            }
+
+            /* Hero Section - Calendar Grid */
+            .hero-section {
+                display: flex;
+                justify-content: center;
+                padding: 20px 40px 30px;
             }
 
             .calendar-grid {
-                gap: 4px;
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 6px;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .weekday-header {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 10px;
+                font-weight: 700;
+                color: var(--text-label);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                text-align: center;
+                padding: 8px 0;
+            }
+
+            .weekday-header.weekend {
+                color: var(--color-coral);
             }
 
             .day-cell {
-                min-height: 40px;
+                aspect-ratio: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 6px;
+                background: #dadbd4;
+                box-shadow:
+                    inset 2px 2px 4px rgba(0, 0, 0, 0.08),
+                    inset -2px -2px 4px rgba(255, 255, 255, 0.7);
+                cursor: pointer;
+                transition: all 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+                position: relative;
+                min-height: 48px;
+            }
+
+            .day-cell:hover:not(.empty):not(.disabled) {
+                background: #d0d1cc;
+            }
+
+            .day-cell.empty {
+                background: transparent;
+                box-shadow: none;
+                cursor: default;
+            }
+
+            .day-cell.disabled {
+                opacity: 0.3;
+                cursor: default;
+            }
+
+            .day-cell.has-plan {
+                background: linear-gradient(
+                    135deg,
+                    var(--color-teal),
+                    var(--shade-teal)
+                );
+                color: white;
+                box-shadow:
+                    0 3px 0 var(--shade-teal),
+                    0 5px 8px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            }
+
+            .day-cell.has-plan:active {
+                transform: translateY(2px);
+                box-shadow:
+                    0 1px 0 var(--shade-teal),
+                    0 2px 3px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            }
+
+            .day-cell.selected {
+                background: linear-gradient(
+                    135deg,
+                    var(--color-cyan),
+                    var(--shade-cyan)
+                );
+                color: white;
+                box-shadow:
+                    0 3px 0 var(--shade-cyan),
+                    0 5px 12px rgba(0, 165, 165, 0.4),
+                    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            }
+
+            .day-cell.selected:active {
+                transform: translateY(2px);
+                box-shadow:
+                    0 1px 0 var(--shade-cyan),
+                    0 2px 4px rgba(0, 165, 165, 0.3),
+                    inset 0 1px 1px rgba(255, 255, 255, 0.3);
             }
 
             .day-number {
-                font-size: 11px;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 13px;
+                font-weight: 700;
+                line-height: 1;
             }
 
             .day-label {
-                font-size: 7px;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 8px;
+                font-weight: 500;
+                margin-top: 2px;
+                opacity: 0.8;
+            }
+
+            /* Markers */
+            .day-cell.has-water::before {
+                content: "";
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                width: 6px;
+                height: 6px;
+                background: #ff6b4a;
+                border-radius: 50%;
+                box-shadow: 0 0 4px #ff6b4a;
+            }
+
+            .day-cell.has-co2::after {
+                content: "";
+                position: absolute;
+                top: 3px;
+                right: 3px;
+                width: 6px;
+                height: 6px;
+                background: var(--color-amber);
+                border-radius: 50%;
+                box-shadow: 0 0 4px var(--color-amber);
+            }
+
+            /* Today highlight - 硬件风格一致 */
+            .day-cell.today {
+                background: linear-gradient(145deg, #3a9a8a, #2d8a7b);
+                box-shadow:
+                    0 4px 0 #1f6356,
+                    0 6px 10px rgba(0, 0, 0, 0.25),
+                    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+                border: 2px solid var(--color-cyan);
+            }
+
+            .day-cell.today .day-number {
+                color: #fff;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
+
+            .day-cell.today .day-label {
+                color: rgba(255, 255, 255, 0.9);
+            }
+
+            /* Month Navigation Controls */
+            .controls-section {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+                padding: 10px 0 30px;
+            }
+
+            .control-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .control-label {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 10px;
+                font-weight: 700;
+                color: var(--text-label);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+
+            .hardware-btn {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                outline: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .btn-well {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #dadbd4;
+                box-shadow:
+                    inset 2px 2px 4px rgba(0, 0, 0, 0.1),
+                    inset -2px -2px 4px rgba(255, 255, 255, 0.7);
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .btn-cap {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                position: absolute;
+                top: -2px;
+                background-color: var(--btn-color, var(--color-teal));
+                box-shadow:
+                    inset 0 2px 2px rgba(255, 255, 255, 0.4),
+                    inset 0 -1px 3px rgba(0, 0, 0, 0.2),
+                    0 4px 0 var(--btn-shade, var(--shade-teal)),
+                    0 6px 6px rgba(0, 0, 0, 0.2);
+                transition: all 0.08s cubic-bezier(0.25, 1, 0.5, 1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 14px;
+            }
+
+            .hardware-btn:active .btn-cap,
+            .hardware-btn.is-active .btn-cap {
+                top: 2px;
+                box-shadow:
+                    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+                    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+                    0 0px 0 var(--btn-shade, var(--shade-teal)),
+                    0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+
+            .month-display {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--text-main);
+                min-width: 100px;
+                text-align: center;
+            }
+
+            /* Panel Divider */
+            .panel-divider {
+                height: 2px;
+                width: 100%;
+                background: var(--panel-gap-dark);
+                border-bottom: 1px solid var(--panel-gap-light);
+            }
+
+            /* Detail Section */
+            .detail-section {
+                padding: 30px 40px 40px;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .detail-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .detail-date {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 18px;
+                font-weight: 700;
+                color: var(--text-main);
+            }
+
+            .detail-phase {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--color-cyan);
+                padding: 6px 12px;
+                background: rgba(0, 165, 165, 0.15);
+                border-radius: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
             }
 
             .detail-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <main class="device-panel">
-        <header class="panel-header">
-            <div class="brand">AQUARIUM / CALENDAR</div>
-            <div class="model-number">AC-30D</div>
-        </header>
-
-        <section class="hero-section">
-            <div class="calendar-grid" id="calendarGrid"></div>
-        </section>
-
-        <section class="controls-section">
-            <div class="control-group">
-                <span class="control-label">Prev</span>
-                <button class="hardware-btn" id="prevMonth" aria-label="Previous Month">
-                    <div class="btn-well">
-                        <div class="btn-cap" style="--btn-color: var(--color-teal); --btn-shade: var(--shade-teal);">◀</div>
-                    </div>
-                </button>
-            </div>
-            <div class="month-display" id="monthDisplay">2026 / 03</div>
-            <div class="control-group">
-                <span class="control-label">Next</span>
-                <button class="hardware-btn" id="nextMonth" aria-label="Next Month">
-                    <div class="btn-well">
-                        <div class="btn-cap" style="--btn-color: var(--color-teal); --btn-shade: var(--shade-teal);">▶</div>
-                    </div>
-                </button>
-            </div>
-        </section>
-
-        <div class="panel-divider"></div>
-
-        <section class="detail-section">
-            <div class="detail-header">
-                <span class="detail-date" id="detailDate">3月8日</span>
-                <span class="detail-phase" id="detailPhase">开缸日</span>
-            </div>
-            <div class="detail-grid" id="detailContent"></div>
-        </section>
-
-        <div class="panel-divider"></div>
-
-        <section class="legend-section">
-            <div class="legend-item">
-                <span class="legend-dot plan"></span>
-                <span>有计划</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot water"></span>
-                <span>💧 换水日</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot co2"></span>
-                <span>🫧 开CO₂</span>
-            </div>
-        </section>
-
-        <footer class="panel-footer">
-            <div class="footer-text">25×15×20cm · 8W LED</div>
-            <div class="footer-specs">
-                迷你牛毛 · 南美叉柱<br>
-                赤焰灯芯 · 红丝青叶
-            </div>
-        </footer>
-    </main>
-
-    <script>
-        // Data
-        const waterChangeDays = ['3-9', '3-10', '3-11', '3-12', '3-14', '3-16', '3-18', '3-20', '3-22', '3-23', '3-26', '3-29', '3-30', '4-2', '4-5'];
-        const co2Days = ['3-23', '3-24', '3-25', '3-26', '3-27', '3-28', '3-29', '3-30', '3-31', '4-1', '4-2', '4-3', '4-4', '4-5', '4-6', '4-7'];
-
-        const plans = {
-            '3-8': {
-                phase: '开缸日',
-                items: [
-                    { label: '底床', value: '尼特利2代铺4cm' },
-                    { label: '种植', value: '前：牛毛+叉柱 / 中：赤焰 / 后：莎草+红丝' },
-                    { label: '加水', value: '沿缸壁缓慢加满' },
-                    { label: '灯光', value: '全程关闭' },
-                    { label: 'CO₂', value: '关闭' }
-                ],
-                note: '水浑不管，过滤开一晚清澈'
-            },
-            '3-9': { phase: 'Day1', items: [
-                { label: '灯光', value: '关闭' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '不喂鱼、不拔水草' },
-            '3-10': { phase: 'Day2', items: [
-                { label: '灯光', value: '关闭' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '菌膜浑水不用管' },
-            '3-11': { phase: 'Day3', items: [
-                { label: '灯光', value: '关闭' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '稳水期' },
-            '3-12': { phase: 'Day4', items: [
-                { label: '灯光', value: '1小时' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '时段固定后不改' },
-            '3-13': { phase: 'Day5', items: [
-                { label: '灯光', value: '1小时' }, { label: 'CO₂', value: '关闭' }
-            ], note: '禁喂鱼虾' },
-            '3-14': { phase: 'Day6', items: [
-                { label: '灯光', value: '1小时' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '不拔动水草' },
-            '3-15': { phase: 'Day7', items: [
-                { label: '灯光', value: '1小时' }, { label: 'CO₂', value: '关闭' }
-            ], note: '转水适应期' },
-            '3-16': { phase: 'Day8', items: [
-                { label: '灯光', value: '1.5小时' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '缓苗扎根关键期' },
-            '3-17': { phase: 'Day9', items: [
-                { label: '灯光', value: '1.5小时' }, { label: 'CO₂', value: '关闭' }
-            ], note: '融叶剪掉即可' },
-            '3-18': { phase: 'Day10', items: [
-                { label: '灯光', value: '1.5小时' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '禁喂肥' },
-            '3-19': { phase: 'Day11', items: [
-                { label: '灯光', value: '1.5小时' }, { label: 'CO₂', value: '关闭' }
-            ], note: '飘起固定' },
-            '3-20': { phase: 'Day12', items: [
-                { label: '灯光', value: '1.5小时' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '第2周' },
-            '3-21': { phase: 'Day13', items: [
-                { label: '灯光', value: '1.5小时' }, { label: 'CO₂', value: '关闭' }
-            ], note: '继续稳水' },
-            '3-22': { phase: 'Day14', items: [
-                { label: '灯光', value: '1.5小时' }, { label: 'CO₂', value: '关闭' }, { label: '换水', value: '1/4' }
-            ], note: '第2周结束' },
-            '3-23': { phase: 'Day15', items: [
-                { label: '灯光', value: '2.5小时' }, { label: 'CO₂', value: '3秒1泡' }, { label: '换水', value: '1/4' }
-            ], note: '★首次开CO₂！注意鱼虾' },
-            '3-24': { phase: 'Day16', items: [
-                { label: '灯光', value: '2.5小时' }, { label: 'CO₂', value: '3秒1泡' }
-            ], note: '后景草徒长快' },
-            '3-25': { phase: 'Day17', items: [
-                { label: '灯光', value: '2.5小时' }, { label: 'CO₂', value: '3秒1泡' }
-            ], note: '8cm立刻打头' },
-            '3-26': { phase: 'Day18', items: [
-                { label: '灯光', value: '2.5小时' }, { label: 'CO₂', value: '3秒1泡' }, { label: '换水', value: '1/4' }
-            ], note: '可极少量喂' },
-            '3-27': { phase: 'Day19', items: [
-                { label: '灯光', value: '2.5小时' }, { label: 'CO₂', value: '3秒1泡' }
-            ], note: '有藻减30分钟' },
-            '3-28': { phase: 'Day20', items: [
-                { label: '灯光', value: '2.5小时' }, { label: 'CO₂', value: '3秒1泡' }
-            ], note: '第3周' },
-            '3-29': { phase: 'Day21', items: [
-                { label: '灯光', value: '2.5小时' }, { label: 'CO₂', value: '3秒1泡' }, { label: '换水', value: '1/4' }
-            ], note: '第3周结束' },
-            '3-30': { phase: 'Day22', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }, { label: '换水', value: '1/4' }
-            ], note: '★封顶时长' },
-            '3-31': { phase: 'Day23', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }
-            ], note: '检查草高' },
-            '4-1': { phase: 'Day24', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }
-            ], note: '及时打头' },
-            '4-2': { phase: 'Day25', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }, { label: '换水', value: '1/4' }
-            ], note: '第4周' },
-            '4-3': { phase: 'Day26', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }
-            ], note: '全程禁肥' },
-            '4-4': { phase: 'Day27', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }
-            ], note: '严控喂食' },
-            '4-5': { phase: 'Day28', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }, { label: '换水', value: '1/4' }
-            ], note: '接近满月' },
-            '4-6': { phase: 'Day29', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }
-            ], note: '满月倒计时' },
-            '4-7': { phase: 'Day30', items: [
-                { label: '灯光', value: '3小时' }, { label: 'CO₂', value: '2.5-3秒1泡' }, { label: '换水', value: '每周1/3' }
-            ], note: '★满月！进入维护' }
-        };
-
-        // State
-        let currentMonth = 2;
-        let currentYear = 2026;
-        let selectedDate = { month: 3, day: 8 };
-
-        // Get day label
-        function getDayLabel(month, day) {
-            if (month === 3 && day >= 8) return `Day${day - 7}`;
-            if (month === 4 && day <= 7) return `Day${day + 23}`;
-            return '';
-        }
-
-        // Render Calendar
-        function renderCalendar() {
-            const grid = document.getElementById('calendarGrid');
-            const monthDisplay = document.getElementById('monthDisplay');
-            const prevBtn = document.getElementById('prevMonth');
-            const nextBtn = document.getElementById('nextMonth');
-
-            monthDisplay.textContent = `${currentYear} / ${String(currentMonth + 1).padStart(2, '0')}`;
-
-            prevBtn.disabled = currentMonth < 2;
-            nextBtn.disabled = currentMonth > 3;
-
-            prevBtn.style.opacity = currentMonth < 2 ? '0.3' : '1';
-            nextBtn.style.opacity = currentMonth > 3 ? '0.3' : '1';
-
-            // Weekday headers
-            const weekdays = ['一', '二', '三', '四', '五', '六', '日'];
-            let html = weekdays.map((day, i) =>
-                `<div class="weekday-header ${i === 5 || i === 6 ? 'weekend' : ''}">${day}</div>`
-            ).join('');
-
-            // Days - Monday = 0, Sunday = 6
-            const firstDayRaw = new Date(currentYear, currentMonth, 1).getDay();
-            const firstDay = firstDayRaw === 0 ? 6 : firstDayRaw - 1;
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            const today = new Date();
-
-            // Empty cells
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div class="day-cell empty"></div>';
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 12px;
             }
 
-            // Day cells
-            for (let day = 1; day <= daysInMonth; day++) {
-                const key = `${currentMonth + 1}-${day}`;
-                const hasPlan = plans[key];
-                const hasWater = waterChangeDays.includes(key);
-                const hasCO2 = co2Days.includes(key);
-                const isToday = currentMonth === today.getMonth() && currentYear === today.getFullYear() && day === today.getDate();
-                const isSelected = currentMonth + 1 === selectedDate.month && day === selectedDate.day;
-                const isDisabled = !hasPlan;
+            .detail-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                background: #e8e8e4;
+                border-radius: 6px;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                border-top-color: rgba(255, 255, 255, 0.8);
+                border-left-color: rgba(255, 255, 255, 0.8);
+            }
 
-                let classes = ['day-cell'];
-                if (hasPlan) classes.push('has-plan');
-                if (hasWater) classes.push('has-water');
-                if (hasCO2) classes.push('has-co2');
-                if (isToday) classes.push('today');
-                if (isSelected) classes.push('selected');
-                if (isDisabled) classes.push('disabled');
+            .detail-label {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 10px;
+                font-weight: 700;
+                color: var(--color-coral);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                min-width: 40px;
+            }
 
-                const label = getDayLabel(currentMonth + 1, day);
+            .detail-value {
+                font-family: "Noto Sans SC", sans-serif;
+                font-size: 13px;
+                color: var(--text-main);
+            }
 
-                html += `
-                    <div class="${classes.join(' ')}" data-month="${currentMonth + 1}" data-day="${day}">
+            .detail-note {
+                margin-top: 16px;
+                padding: 12px 16px;
+                background: rgba(224, 122, 95, 0.12);
+                border-radius: 6px;
+                border-left: 3px solid var(--color-coral);
+            }
+
+            .detail-note-label {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 9px;
+                font-weight: 700;
+                color: var(--color-coral);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 4px;
+            }
+
+            .detail-note-text {
+                font-family: "Noto Sans SC", sans-serif;
+                font-size: 13px;
+                color: var(--text-main);
+                line-height: 1.5;
+            }
+
+            /* Legend */
+            .legend-section {
+                padding: 20px 40px;
+                display: flex;
+                justify-content: center;
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 11px;
+                color: var(--text-muted);
+            }
+
+            .legend-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
+
+            .legend-dot.plan {
+                background: var(--color-teal);
+                box-shadow: 0 0 6px var(--color-teal);
+            }
+
+            .legend-dot.water {
+                background: #ff6b4a;
+                box-shadow: 0 0 6px #ff6b4a;
+            }
+
+            .legend-dot.co2 {
+                background: var(--color-amber);
+                box-shadow: 0 0 6px var(--color-amber);
+            }
+
+            /* Footer */
+            .panel-footer {
+                padding: 0 40px 25px;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+
+            .footer-text {
+                font-weight: 500;
+                font-size: 14px;
+                letter-spacing: -0.02em;
+            }
+
+            .footer-specs {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 10px;
+                color: var(--text-muted);
+                text-align: right;
+                line-height: 1.6;
+            }
+
+            /* Mobile Responsive */
+            @media (max-width: 600px) {
+                .device-panel {
+                    border-radius: 0;
+                    margin: 0;
+                }
+
+                body {
+                    padding: 0;
+                    background: var(--casing-bg);
+                }
+
+                .panel-header,
+                .hero-section,
+                .detail-section,
+                .legend-section,
+                .panel-footer {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+
+                .calendar-grid {
+                    gap: 4px;
+                }
+
+                .day-cell {
+                    min-height: 40px;
+                }
+
+                .day-number {
+                    font-size: 11px;
+                }
+
+                .day-label {
+                    font-size: 7px;
+                }
+
+                .detail-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="device-panel">
+            <header class="panel-header">
+                <div class="brand">AQUARIUM / CALENDAR</div>
+                <div class="model-number">AC-30D</div>
+            </header>
+
+            <section class="hero-section">
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </section>
+
+            <section class="controls-section">
+                <div class="control-group">
+                    <span class="control-label">Prev</span>
+                    <button
+                        class="hardware-btn"
+                        id="prevMonth"
+                        aria-label="Previous Month"
+                    >
+                        <div class="btn-well">
+                            <div
+                                class="btn-cap"
+                                style="
+                                    --btn-color: var(--color-teal);
+                                    --btn-shade: var(--shade-teal);
+                                "
+                            >
+                                ◀
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="month-display" id="monthDisplay">2026 / 03</div>
+                <div class="control-group">
+                    <span class="control-label">Next</span>
+                    <button
+                        class="hardware-btn"
+                        id="nextMonth"
+                        aria-label="Next Month"
+                    >
+                        <div class="btn-well">
+                            <div
+                                class="btn-cap"
+                                style="
+                                    --btn-color: var(--color-teal);
+                                    --btn-shade: var(--shade-teal);
+                                "
+                            >
+                                ▶
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+            <div class="panel-divider"></div>
+
+            <section class="detail-section">
+                <div class="detail-header">
+                    <span class="detail-date" id="detailDate">3月8日</span>
+                    <span class="detail-phase" id="detailPhase">开缸日</span>
+                </div>
+                <div class="detail-grid" id="detailContent"></div>
+            </section>
+
+            <div class="panel-divider"></div>
+
+            <section class="legend-section">
+                <div class="legend-item">
+                    <span class="legend-dot plan"></span>
+                    <span>有计划</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot water"></span>
+                    <span>💧 换水日</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot co2"></span>
+                    <span>🫧 开CO₂</span>
+                </div>
+            </section>
+
+            <footer class="panel-footer">
+                <div class="footer-text">25×15×20cm · 8W LED</div>
+                <div class="footer-specs">
+                    迷你牛毛 · 南美叉柱<br />
+                    赤焰灯芯 · 红丝青叶
+                </div>
+            </footer>
+        </main>
+
+        <script>
+            // Data
+            const waterChangeDays = [
+                "3-9",
+                "3-10",
+                "3-11",
+                "3-12",
+                "3-14",
+                "3-16",
+                "3-18",
+                "3-20",
+                "3-22",
+                "3-23",
+                "3-26",
+                "3-29",
+                "3-30",
+                "4-2",
+                "4-5",
+            ];
+            const co2Days = [
+                "3-23",
+                "3-24",
+                "3-25",
+                "3-26",
+                "3-27",
+                "3-28",
+                "3-29",
+                "3-30",
+                "3-31",
+                "4-1",
+                "4-2",
+                "4-3",
+                "4-4",
+                "4-5",
+                "4-6",
+                "4-7",
+            ];
+
+            const plans = {
+                "3-8": {
+                    phase: "开缸日",
+                    items: [
+                        { label: "底床", value: "尼特利2代铺4cm" },
+                        {
+                            label: "种植",
+                            value: "前：牛毛+叉柱 / 中：赤焰 / 后：莎草+红丝",
+                        },
+                        { label: "加水", value: "沿缸壁缓慢加满" },
+                        { label: "灯光", value: "全程关闭" },
+                        { label: "CO₂", value: "关闭" },
+                    ],
+                    note: "水浑不管，过滤开一晚清澈",
+                },
+                "3-9": {
+                    phase: "Day1",
+                    items: [
+                        { label: "灯光", value: "关闭" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "不喂鱼、不拔水草",
+                },
+                "3-10": {
+                    phase: "Day2",
+                    items: [
+                        { label: "灯光", value: "关闭" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "菌膜浑水不用管",
+                },
+                "3-11": {
+                    phase: "Day3",
+                    items: [
+                        { label: "灯光", value: "关闭" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "稳水期",
+                },
+                "3-12": {
+                    phase: "Day4",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "时段固定后不改",
+                },
+                "3-13": {
+                    phase: "Day5",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO₂", value: "关闭" },
+                    ],
+                    note: "禁喂鱼虾",
+                },
+                "3-14": {
+                    phase: "Day6",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "不拔动水草",
+                },
+                "3-15": {
+                    phase: "Day7",
+                    items: [
+                        { label: "灯光", value: "1小时" },
+                        { label: "CO₂", value: "关闭" },
+                    ],
+                    note: "转水适应期",
+                },
+                "3-16": {
+                    phase: "Day8",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "缓苗扎根关键期",
+                },
+                "3-17": {
+                    phase: "Day9",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO₂", value: "关闭" },
+                    ],
+                    note: "融叶剪掉即可",
+                },
+                "3-18": {
+                    phase: "Day10",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "禁喂肥",
+                },
+                "3-19": {
+                    phase: "Day11",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO₂", value: "关闭" },
+                    ],
+                    note: "飘起固定",
+                },
+                "3-20": {
+                    phase: "Day12",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第2周",
+                },
+                "3-21": {
+                    phase: "Day13",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO₂", value: "关闭" },
+                    ],
+                    note: "继续稳水",
+                },
+                "3-22": {
+                    phase: "Day14",
+                    items: [
+                        { label: "灯光", value: "1.5小时" },
+                        { label: "CO₂", value: "关闭" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第2周结束",
+                },
+                "3-23": {
+                    phase: "Day15",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO₂", value: "3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "★首次开CO₂！注意鱼虾",
+                },
+                "3-24": {
+                    phase: "Day16",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO₂", value: "3秒1泡" },
+                    ],
+                    note: "后景草徒长快",
+                },
+                "3-25": {
+                    phase: "Day17",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO₂", value: "3秒1泡" },
+                    ],
+                    note: "8cm立刻打头",
+                },
+                "3-26": {
+                    phase: "Day18",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO₂", value: "3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "可极少量喂",
+                },
+                "3-27": {
+                    phase: "Day19",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO₂", value: "3秒1泡" },
+                    ],
+                    note: "有藻减30分钟",
+                },
+                "3-28": {
+                    phase: "Day20",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO₂", value: "3秒1泡" },
+                    ],
+                    note: "第3周",
+                },
+                "3-29": {
+                    phase: "Day21",
+                    items: [
+                        { label: "灯光", value: "2.5小时" },
+                        { label: "CO₂", value: "3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第3周结束",
+                },
+                "3-30": {
+                    phase: "Day22",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "★封顶时长",
+                },
+                "3-31": {
+                    phase: "Day23",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                    ],
+                    note: "检查草高",
+                },
+                "4-1": {
+                    phase: "Day24",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                    ],
+                    note: "及时打头",
+                },
+                "4-2": {
+                    phase: "Day25",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "第4周",
+                },
+                "4-3": {
+                    phase: "Day26",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                    ],
+                    note: "全程禁肥",
+                },
+                "4-4": {
+                    phase: "Day27",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                    ],
+                    note: "严控喂食",
+                },
+                "4-5": {
+                    phase: "Day28",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "1/4" },
+                    ],
+                    note: "接近满月",
+                },
+                "4-6": {
+                    phase: "Day29",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                    ],
+                    note: "满月倒计时",
+                },
+                "4-7": {
+                    phase: "Day30",
+                    items: [
+                        { label: "灯光", value: "3小时" },
+                        { label: "CO₂", value: "2.5-3秒1泡" },
+                        { label: "换水", value: "每周1/3" },
+                    ],
+                    note: "★满月！进入维护",
+                },
+            };
+
+            // State
+            let currentMonth = 2;
+            let currentYear = 2026;
+            let selectedDate = { month: 3, day: 8 };
+
+            // Get day label
+            function getDayLabel(month, day) {
+                if (month === 3 && day >= 8) return `Day${day - 7}`;
+                if (month === 4 && day <= 7) return `Day${day + 23}`;
+                return "";
+            }
+
+            // Render Calendar
+            function renderCalendar() {
+                const grid = document.getElementById("calendarGrid");
+                const monthDisplay = document.getElementById("monthDisplay");
+                const prevBtn = document.getElementById("prevMonth");
+                const nextBtn = document.getElementById("nextMonth");
+
+                monthDisplay.textContent = `${currentYear} / ${String(currentMonth + 1).padStart(2, "0")}`;
+
+                prevBtn.disabled = currentMonth < 2;
+                nextBtn.disabled = currentMonth > 3;
+
+                prevBtn.style.opacity = currentMonth < 2 ? "0.3" : "1";
+                nextBtn.style.opacity = currentMonth > 3 ? "0.3" : "1";
+
+                // Weekday headers
+                const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
+                let html = weekdays
+                    .map(
+                        (day, i) =>
+                            `<div class="weekday-header ${i === 5 || i === 6 ? "weekend" : ""}">${day}</div>`,
+                    )
+                    .join("");
+
+                // Days - Monday = 0, Sunday = 6
+                const firstDayRaw = new Date(
+                    currentYear,
+                    currentMonth,
+                    1,
+                ).getDay();
+                const firstDay = firstDayRaw === 0 ? 6 : firstDayRaw - 1;
+                const daysInMonth = new Date(
+                    currentYear,
+                    currentMonth + 1,
+                    0,
+                ).getDate();
+                const today = new Date();
+
+                // Empty cells
+                for (let i = 0; i < firstDay; i++) {
+                    html += '<div class="day-cell empty"></div>';
+                }
+
+                // Day cells
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const key = `${currentMonth + 1}-${day}`;
+                    const hasPlan = plans[key];
+                    const hasWater = waterChangeDays.includes(key);
+                    const hasCO2 = co2Days.includes(key);
+                    const isToday =
+                        currentMonth === today.getMonth() &&
+                        currentYear === today.getFullYear() &&
+                        day === today.getDate();
+                    const isSelected =
+                        currentMonth + 1 === selectedDate.month &&
+                        day === selectedDate.day;
+                    const isDisabled = !hasPlan;
+
+                    let classes = ["day-cell"];
+                    if (hasPlan) classes.push("has-plan");
+                    if (hasWater) classes.push("has-water");
+                    if (hasCO2) classes.push("has-co2");
+                    if (isToday) classes.push("today");
+                    if (isSelected) classes.push("selected");
+                    if (isDisabled) classes.push("disabled");
+
+                    const label = getDayLabel(currentMonth + 1, day);
+
+                    html += `
+                    <div class="${classes.join(" ")}" data-month="${currentMonth + 1}" data-day="${day}">
                         <span class="day-number">${day}</span>
                         <span class="day-label">${label}</span>
                     </div>
                 `;
+                }
+
+                grid.innerHTML = html;
+
+                // Add click handlers
+                grid.querySelectorAll(".day-cell.has-plan").forEach((cell) => {
+                    cell.addEventListener("click", () => {
+                        const month = parseInt(cell.dataset.month);
+                        const day = parseInt(cell.dataset.day);
+                        showDetail(month, day);
+                    });
+                });
             }
 
-            grid.innerHTML = html;
+            // Show Detail
+            function showDetail(month, day) {
+                selectedDate.month = month;
+                selectedDate.day = day;
+                renderCalendar();
 
-            // Add click handlers
-            grid.querySelectorAll('.day-cell.has-plan').forEach(cell => {
-                cell.addEventListener('click', () => {
-                    const month = parseInt(cell.dataset.month);
-                    const day = parseInt(cell.dataset.day);
-                    showDetail(month, day);
-                });
-            });
-        }
+                const key = `${month}-${day}`;
+                const plan = plans[key];
+                if (!plan) return;
 
-        // Show Detail
-        function showDetail(month, day) {
-            selectedDate.month = month;
-            selectedDate.day = day;
-            renderCalendar();
+                document.getElementById("detailDate").textContent =
+                    `${month}月${day}日`;
+                document.getElementById("detailPhase").textContent =
+                    plan.phase || "";
 
-            const key = `${month}-${day}`;
-            const plan = plans[key];
-            if (!plan) return;
-
-            document.getElementById('detailDate').textContent = `${month}月${day}日`;
-            document.getElementById('detailPhase').textContent = plan.phase || '';
-
-            let html = '';
-            plan.items.forEach(item => {
-                html += `
+                let html = "";
+                plan.items.forEach((item) => {
+                    html += `
                     <div class="detail-item">
                         <span class="detail-label">${item.label}</span>
                         <span class="detail-value">${item.value}</span>
                     </div>
                 `;
-            });
+                });
 
-            if (plan.note) {
-                html += `
+                if (plan.note) {
+                    html += `
                     <div class="detail-note">
                         <div class="detail-note-label">Note</div>
                         <div class="detail-note-text">${plan.note}</div>
                     </div>
                 `;
+                }
+
+                document.getElementById("detailContent").innerHTML = html;
             }
 
-            document.getElementById('detailContent').innerHTML = html;
-        }
+            // Event Listeners
+            document
+                .getElementById("prevMonth")
+                .addEventListener("click", () => {
+                    if (currentMonth > 2) {
+                        currentMonth--;
+                        renderCalendar();
+                    }
+                });
 
-        // Event Listeners
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            if (currentMonth > 2) {
-                currentMonth--;
-                renderCalendar();
-            }
-        });
+            document
+                .getElementById("nextMonth")
+                .addEventListener("click", () => {
+                    if (currentMonth < 3) {
+                        currentMonth++;
+                        renderCalendar();
+                    }
+                });
 
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            if (currentMonth < 3) {
-                currentMonth++;
-                renderCalendar();
-            }
-        });
-
-        // Initialize
-        renderCalendar();
-        // 默认显示今天
-        const today = new Date();
-        const todayMonth = today.getMonth();
-        const todayDay = today.getDate();
-        currentMonth = todayMonth;
-        const key = `${todayMonth + 1}-${todayDay}`;
-        if (plans[key]) {
-            selectedDate = { month: todayMonth + 1, day: todayDay };
+            // Initialize
             renderCalendar();
-            showDetail(todayMonth + 1, todayDay);
-        } else {
-            showDetail(3, 8);
-        }
-    </script>
-</body>
+            // 默认显示今天
+            const today = new Date();
+            const todayMonth = today.getMonth();
+            const todayDay = today.getDate();
+            currentMonth = todayMonth;
+            const key = `${todayMonth + 1}-${todayDay}`;
+            if (plans[key]) {
+                selectedDate = { month: todayMonth + 1, day: todayDay };
+                renderCalendar();
+                showDetail(todayMonth + 1, todayDay);
+            } else {
+                showDetail(3, 8);
+            }
+        </script>
+    </body>
 </html>

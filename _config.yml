@@ -1,0 +1,7 @@
+# 启用重定向插件
+plugins:
+  - jekyll-redirect-from
+
+# 确保下划线文件不被忽略（可选，但建议保留）
+include:
+  - .nojekyll
