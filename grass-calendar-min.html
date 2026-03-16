@@ -1,6 +1,7 @@
 ---
 redirect_from:
-    - /
+    - /grass
+    - /grass/
 ---
 
 <!doctype html>
@@ -229,6 +230,8 @@ redirect_from:
                 top: 6px;
                 left: 6px;
                 background: var(--color-water);
+                animation: pulse-water 2s ease-in-out infinite;
+                animation-delay: 0.5s;
             }
 
             .day.has-co2::after {
@@ -240,6 +243,31 @@ redirect_from:
                 top: 6px;
                 right: 6px;
                 background: var(--color-co2);
+                animation: pulse-co2 2s ease-in-out infinite;
+            }
+
+            @keyframes pulse-co2 {
+                0%,
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.3);
+                    opacity: 0.7;
+                }
+            }
+
+            @keyframes pulse-water {
+                0%,
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.3);
+                    opacity: 0.7;
+                }
             }
 
             /* 选中状态 - 保持高对比度 */
@@ -251,6 +279,92 @@ redirect_from:
             .day.selected.has-water::before,
             .day.selected.has-co2::after {
                 background: white;
+            }
+
+            /* Milestone celebration */
+            .day.milestone {
+                background: linear-gradient(
+                    135deg,
+                    var(--color-accent),
+                    #3da371
+                ) !important;
+                color: white !important;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(45, 138, 94, 0.3);
+            }
+
+            .day.milestone::before {
+                content: "★";
+                position: absolute;
+                top: -8px;
+                right: -6px;
+                font-size: 10px;
+                color: var(--color-co2);
+                animation: star-spin 3s linear infinite;
+            }
+
+            @keyframes star-spin {
+                0% {
+                    transform: rotate(0deg) scale(1);
+                }
+                50% {
+                    transform: rotate(180deg) scale(1.2);
+                }
+                100% {
+                    transform: rotate(360deg) scale(1);
+                }
+            }
+
+            /* Day entrance animation */
+            .day {
+                animation: day-fade-in 0.3s ease-out backwards;
+            }
+
+            @keyframes day-fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px) scale(0.9);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            /* Button press delight */
+            .nav-btn:active {
+                transform: scale(0.92);
+                transition: transform 0.1s ease;
+            }
+
+            /* Confetti burst for milestone */
+            .confetti-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 1000;
+                overflow: hidden;
+            }
+
+            .confetti {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                opacity: 0;
+            }
+
+            @keyframes confetti-fall {
+                0% {
+                    opacity: 1;
+                    transform: translateY(-20px) rotate(0deg);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(100vh) rotate(720deg);
+                }
             }
 
             .day-label {
@@ -266,6 +380,22 @@ redirect_from:
                 border-radius: var(--radius-lg);
                 padding: var(--space-lg);
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+                overflow: hidden;
+            }
+
+            .detail-content-animate {
+                animation: slide-up 0.3s ease-out;
+            }
+
+            @keyframes slide-up {
+                from {
+                    opacity: 0;
+                    transform: translateY(16px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .detail-header {
@@ -385,6 +515,17 @@ redirect_from:
                 height: 48px;
                 margin-bottom: var(--space-md);
                 opacity: 0.4;
+                animation: float 3s ease-in-out infinite;
+            }
+
+            @keyframes float {
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-6px);
+                }
             }
 
             /* Responsive */
@@ -876,10 +1017,19 @@ redirect_from:
                     if (isSelected) classes.push("selected");
                     if (isDisabled) classes.push("disabled");
 
+                    // Get label first
                     const label = getDayLabel(currentMonth + 1, day);
 
+                    // Milestone days - Day 1, Day 15 (CO2 start), Day 30 (completion)
+                    const dayNum = parseInt(label.replace("D", ""));
+                    if (dayNum === 1 || dayNum === 15 || dayNum === 30) {
+                        classes.push("milestone");
+                    }
+
+                    const animDelay = day * 20 + "ms";
+
                     html += `
-                    <button class="${classes.join(" ")}" data-month="${currentMonth + 1}" data-day="${day}" ${isDisabled ? "disabled" : ""}>
+                    <button class="${classes.join(" ")}" data-month="${currentMonth + 1}" data-day="${day}" data-daynum="${dayNum || ""}" ${isDisabled ? "disabled" : ""} style="animation-delay: ${animDelay}">
                         ${day}
                         ${label ? `<span class="day-label">${label}</span>` : ""}
                     </button>
@@ -904,6 +1054,89 @@ redirect_from:
                 selectedDate = { month, day };
                 renderCalendar();
                 showDetail(month, day);
+
+                // Check for milestone celebration
+                const key = `${month}-${day}`;
+                const plan = plans[key];
+                if (
+                    plan &&
+                    (plan.phase === "Day1" ||
+                        plan.phase === "Day15" ||
+                        plan.phase === "Day30")
+                ) {
+                    triggerCelebration(plan.phase);
+                }
+            }
+
+            // Confetti celebration
+            function triggerCelebration(phase) {
+                let message = "";
+                if (phase === "Day1") message = "🌱 新生命开始！";
+                if (phase === "Day15") message = "🫧 CO2启动！";
+                if (phase === "Day30") message = "🎉 满月快乐！";
+
+                // Create toast
+                const toast = document.createElement("div");
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(-100px);
+                    background: linear-gradient(135deg, var(--color-accent), #3da371);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 30px;
+                    font-weight: 600;
+                    font-size: 14px;
+                    z-index: 1001;
+                    box-shadow: 0 4px 20px rgba(45, 138, 94, 0.4);
+                    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+
+                // Animate in
+                requestAnimationFrame(() => {
+                    toast.style.transform = "translateX(-50%) translateY(0)";
+                });
+
+                // Create confetti
+                createConfetti();
+
+                // Remove toast after delay
+                setTimeout(() => {
+                    toast.style.transform =
+                        "translateX(-50%) translateY(-100px)";
+                    setTimeout(() => toast.remove(), 500);
+                }, 2500);
+            }
+
+            function createConfetti() {
+                const colors = [
+                    "#2d8a5e",
+                    "#e8734a",
+                    "#d4a03d",
+                    "#5cb8a0",
+                    "#ff9f7f",
+                ];
+                const container = document.createElement("div");
+                container.className = "confetti-container";
+                document.body.appendChild(container);
+
+                for (let i = 0; i < 30; i++) {
+                    const confetti = document.createElement("div");
+                    confetti.className = "confetti";
+                    confetti.style.cssText = `
+                        left: ${Math.random() * 100}%;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        animation: confetti-fall ${1.5 + Math.random()}s ease-out forwards;
+                        animation-delay: ${Math.random() * 0.5}s;
+                        border-radius: ${Math.random() > 0.5 ? "50%" : "0"};
+                    `;
+                    container.appendChild(confetti);
+                }
+
+                setTimeout(() => container.remove(), 3000);
             }
 
             function showDetail(month, day) {
@@ -951,6 +1184,9 @@ redirect_from:
                 }
 
                 contentEl.innerHTML = html;
+                contentEl.classList.remove("detail-content-animate");
+                void contentEl.offsetWidth; // Trigger reflow
+                contentEl.classList.add("detail-content-animate");
             }
 
             // Event listeners
