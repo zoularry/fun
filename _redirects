@@ -1,6 +1,6 @@
 # Static redirects for GitHub Pages
 # See: https://developers.cloudflare.com/docs/pages/configuration/redirects/
-
+/           /grass-calendar.html   200
 /grass           /grass-calendar.html   200
 /grass/          /grass-calendar.html   200
 /grass-min       /grass-calendar-min.html   200
