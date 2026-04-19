@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李白《静夜思》</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Ma+Shan+Zheng&display=swap');
+
+        :root {
+            --bg-paper: #f5f0e8;
+            --ink-black: #2c2c2c;
+            --cinnabar: #c93756;
+            --indigo: #1a3a5c;
+            --gold: #b8956e;
+            --light-gold: #d4c4a8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STKaiti', 'KaiTi', serif;
+            background: var(--bg-paper);
+            color: var(--ink-black);
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 48px;
+        }
+
+        .divider {
+            width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cinnabar), transparent);
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: 
+                radial-gradient(ellipse at 70% 20%, rgba(26, 58, 92, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 80%, rgba(201, 55, 86, 0.05) 0%, transparent 40%),
+                linear-gradient(180deg, var(--bg-paper) 0%, #ebe6dc 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 8%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(255, 253, 245, 0.9) 0%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 60px 30px rgba(255, 253, 245, 0.6),
+                0 0 100px 60px rgba(255, 253, 245, 0.3);
+            animation: moonGlow 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35vh;
+            background: 
+                linear-gradient(to top, rgba(26, 58, 92, 0.03) 0%, transparent 100%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath fill='%231a3a5c' fill-opacity='0.04' d='M0,100 Q150,80 300,120 T600,100 T900,130 T1200,90 L1200,200 L0,200 Z'/%3E%3Cpath fill='%231a3a5c' fill-opacity='0.03' d='M0,120 Q200,100 400,140 T800,110 T1200,140 L1200,200 L0,200 Z'/%3E%3C/svg%3E") bottom/cover no-repeat;
+            pointer-events: none;
+        }
+
+        @keyframes moonGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            padding: 60px 40px;
+        }
+
+        .hero-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Ma Shan Zheng', 'Noto Serif SC', serif;
+            font-size: clamp(56px, 12vw, 120px);
+            color: var(--ink-black);
+            letter-spacing: 0.3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .hero-title::before,
+        .hero-title::after {
+            content: '『';
+            font-size: 0.4em;
+            color: var(--cinnabar);
+            opacity: 0.6;
+            vertical-align: super;
+        }
+
+        .hero-title::after {
+            content: '』';
+        }
+
+        .hero-author {
+            font-family: 'Ma Shan Zheng', 'Noto Serif SC', serif;
+            font-size: clamp(20px, 4vw, 32px);
+            color: var(--indigo);
+            letter-spacing: 0.5em;
+            opacity: 0.8;
+            margin-top: 16px;
+        }
+
+        .hero-dynasty {
+            display: inline-block;
+            margin-top: 32px;
+            padding: 8px 32px;
+            border: 1px solid var(--light-gold);
+            border-radius: 2px;
+            font-size: 14px;
+            color: var(--gold);
+            letter-spacing: 0.2em;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--light-gold);
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-hint::after {
+            content: '▼';
+            font-size: 10px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* Poem Section */
+        .poem-section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .poem-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--cinnabar), transparent);
+        }
+
+        .poem-content {
+            text-align: center;
+            padding: 60px 40px;
+            background: 
+                radial-gradient(ellipse at center, rgba(201, 55, 86, 0.02) 0%, transparent 70%);
+        }
+
+        .poem-title-vertical {
+            writing-mode: vertical-rl;
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--cinnabar);
+            letter-spacing: 0.5em;
+            opacity: 0.7;
+        }
+
+        .poem-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .poem-line {
+            font-size: clamp(24px, 5vw, 36px);
+            color: var(--ink-black);
+            padding: 20px 0;
+            position: relative;
+            letter-spacing: 0.2em;
+        }
+
+        .poem-line:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--light-gold), transparent);
+        }
+
+        .poem-line .char {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .poem-line .char:hover {
+            color: var(--cinnabar);
+            transform: scale(1.1);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            color: var(--cinnabar);
+            letter-spacing: 0.3em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 5vw, 40px);
+            color: var(--ink-black);
+            letter-spacing: 0.15em;
+        }
+
+        /* Background Section */
+        .background-section {
+            background: linear-gradient(180deg, #ebe6dc 0%, var(--bg-paper) 100%);
+            border-top: 1px solid rgba(184, 149, 110, 0.2);
+            border-bottom: 1px solid rgba(184, 149, 110, 0.2);
+        }
+
+        .background-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 48px;
+        }
+
+        .background-card {
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.5);
+            border-left: 3px solid var(--cinnabar);
+        }
+
+        .card-label {
+            font-size: 12px;
+            color: var(--indigo);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .card-content {
+            font-size: 16px;
+            color: var(--ink-black);
+            line-height: 2;
+        }
+
+        .card-content strong {
+            color: var(--cinnabar);
+            font-weight: 600;
+        }
+
+        /* Author Section */
+        .author-section {
+            padding: 100px 0;
+        }
+
+        .author-card {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 60px;
+            background: 
+                radial-gradient(ellipse at center top, rgba(26, 58, 92, 0.03) 0%, transparent 50%),
+                rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(184, 149, 110, 0.3);
+        }
+
+        .author-name {
+            font-size: 36px;
+            color: var(--ink-black);
+            margin-bottom: 8px;
+            letter-spacing: 0.3em;
+        }
+
+        .author-title {
+            font-size: 18px;
+            color: var(--indigo);
+            margin-bottom: 32px;
+            letter-spacing: 0.2em;
+        }
+
+        .author-tags {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .author-tag {
+            padding: 8px 20px;
+            background: var(--bg-paper);
+            border: 1px solid var(--light-gold);
+            font-size: 14px;
+            color: var(--ink-black);
+            letter-spacing: 0.1em;
+        }
+
+        .author-tag.highlight {
+            background: var(--cinnabar);
+            color: white;
+            border-color: var(--cinnabar);
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            background: linear-gradient(180deg, var(--bg-paper) 0%, #ebe6dc 100%);
+            padding: 100px 0;
+            border-top: 1px solid rgba(184, 149, 110, 0.2);
+        }
+
+        .analysis-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .analysis-item {
+            padding: 32px 0;
+            border-bottom: 1px solid rgba(184, 149, 110, 0.2);
+        }
+
+        .analysis-item:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-verse {
+            font-size: 22px;
+            color: var(--ink-black);
+            margin-bottom: 16px;
+            letter-spacing: 0.15em;
+            padding-left: 24px;
+            border-left: 3px solid var(--cinnabar);
+        }
+
+        .analysis-text {
+            font-size: 15px;
+            color: var(--ink-black);
+            opacity: 0.8;
+            line-height: 2;
+            padding-left: 24px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 0;
+            text-align: center;
+            background: var(--ink-black);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .footer-text {
+            font-size: 14px;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-seal {
+            margin-top: 24px;
+            width: 60px;
+            height: 60px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 2px solid var(--cinnabar);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--cinnabar);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            .hero-title-wrapper {
+                padding: 40px 20px;
+            }
+
+            .poem-title-vertical {
+                display: none;
+            }
+
+            .poem-content {
+                padding: 40px 20px;
+            }
+
+            .author-card {
+                padding: 40px 24px;
+            }
+
+            .background-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-title-wrapper">
+                <h1 class="hero-title">静夜思</h1>
+                <span class="hero-author">李白</span>
+                <span class="hero-dynasty">唐诗三百首</span>
+            </div>
+        </div>
+        <div class="scroll-hint">
+            <span>赏析</span>
+        </div>
+    </section>
+
+    <!-- Poem -->
+    <section class="poem-section">
+        <div class="container">
+            <div class="poem-content">
+                <div class="poem-lines">
+                    <p class="poem-line"><span class="char">床</span><span class="char">前</span><span class="char">明</span><span class="char">月</span><span class="char">光</span>，<span class="char">疑</span><span class="char">是</span><span class="char">地</span><span class="char">上</span><span class="char">霜</span>。</p>
+                    <p class="poem-line"><span class="char">举</span><span class="char">头</span><span class="char">望</span><span class="char">明</span><span class="char">月</span>，<span class="char">低</span><span class="char">头</span><span class="char">思</span><span class="char">故</span><span class="char">乡</span>。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Background -->
+    <section class="section background-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">创作背景</span>
+                <h2 class="section-title">诗歌缘起</h2>
+            </div>
+            <div class="background-grid">
+                <div class="background-card">
+                    <p class="card-label">创作年代</p>
+                    <p class="card-content">唐玄宗<strong>天宝三载</strong>（公元743年）秋</p>
+                </div>
+                <div class="background-card">
+                    <p class="card-label">写作地点</p>
+                    <p class="card-content"><strong>扬州旅舍</strong>，李白时年四十三岁</p>
+                </div>
+                <div class="background-card">
+                    <p class="card-label">时代背景</p>
+                    <p class="card-content">李白离开长安后漫游各地，是年途经扬州所作</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Author -->
+    <section class="section author-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">作者简介</span>
+                <h2 class="section-title">诗仙李白</h2>
+            </div>
+            <div class="author-card">
+                <h3 class="author-name">李白</h3>
+                <p class="author-title">字太白，号青莲居士</p>
+                <div class="author-tags">
+                    <span class="author-tag">唐代伟大诗人</span>
+                    <span class="author-tag highlight">诗仙</span>
+                    <span class="author-tag">浪漫主义代表</span>
+                    <span class="author-tag">青莲居士</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analysis -->
+    <section class="section analysis-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">诗意赏析</span>
+                <h2 class="section-title">逐句解读</h2>
+            </div>
+            <div class="analysis-list">
+                <div class="analysis-item">
+                    <p class="analysis-verse">床前明月光，疑是地上霜。</p>
+                    <p class="analysis-text">月光洒在床前，作者初看以为是地上结了一层秋霜。"疑"字写出诗人初见月光时的恍惚情态，既写出了月光的皎洁明亮，又暗示了季节已是深秋，为全诗奠定了清冷的基调。</p>
+                </div>
+                <div class="analysis-item">
+                    <p class="analysis-verse">举头望明月，低头思故乡。</p>
+                    <p class="analysis-text">诗人抬头仰望那轮皎洁的明月触景生情，勾起了对故乡的思念。"举头"与"低头"两个动作形成对比，从抬头望月到低头沉思，生动地表现出诗人由出神到沉思的情感变化，含蓄地传达出漂泊他乡的孤寂与对故园的深切思念。</p>
+                </div>
+                <div class="analysis-item">
+                    <p class="analysis-verse">艺术特色</p>
+                    <p class="analysis-text">全诗语言清新朴素，明白如话。诗人运用比喻、联想等手法，将月光比作秋霜，形象生动。诗中"举头"与"低头"的对比，"望明月"与"思故乡"的呼应，都恰到好处。短短二十字，却意境深远，耐人寻味，是唐诗中抒发乡愁的千古名篇。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">李白《静夜思》· 天宝三载（743年）</p>
+            <div class="footer-seal">李</div>
+        </div>
+    </footer>
+</body>
+</html>
