@@ -290,7 +290,7 @@
       border: 1px solid rgba(212, 177, 112, 0.45);
       padding: 18px 22px;
       border-radius: 6px;
-      text-align: center;
+      text-align: left;
       font-size: 13.5px;
       line-height: 2.0;
       /* 极具书卷气的高雅行高 */
@@ -626,7 +626,7 @@
       width: 100%;
       background: rgba(246, 240, 226, 0.7);
       border-top: 1px dashed rgba(212, 177, 112, 0.45);
-      padding: 12px 14px 18px 14px;
+      padding: 12px 14px 12px 14px;
       position: relative;
       display: flex;
       flex-direction: row;
@@ -900,10 +900,62 @@
       opacity: 0;
       transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
     }
+
+    /* ==========================================
+       古风全屏切换按钮 (Fullscreen Button)
+       ========================================== */
+    .fullscreen-btn {
+      position: absolute;
+      top: calc(15px + env(safe-area-inset-top));
+      right: 20px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 177, 112, 0.35);
+      background: rgba(252, 250, 242, 0.7);
+      color: var(--color-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(4px);
+      transition: background 0.8s ease, border-color 0.8s ease, color 0.8s ease, transform 0.3s ease; /* 0.8s色调淡入，0.3s物理缩放 */
+      outline: none;
+    }
+
+    /* 抽奖与结算状态下的深色暗金融合样式，极其低调不刺眼 */
+    .fullscreen-btn.dark-mode {
+      background: rgba(18, 22, 26, 0.55); /* 平滑变为暗沉的半透明水墨色 */
+      border-color: rgba(212, 177, 112, 0.22); /* 降低金边刺眼度 */
+      color: rgba(212, 177, 112, 0.65); /* 图标调整为内敛微暗的古金 */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .fullscreen-btn:active {
+      transform: scale(0.9);
+      background: var(--color-gold);
+      color: #fff;
+    }
+
+    .fullscreen-btn svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- 全屏切换按钮（古风玉璧样式） -->
+  <button class="fullscreen-btn" id="btn-fullscreen" title="切换全屏">
+    <svg viewBox="0 0 24 24" id="fullscreen-svg">
+      <path d="M4 8V4h4M16 4h4v4M4 16v4h4M16 20h4v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+        stroke-linejoin="round" fill="none" />
+    </svg>
+  </button>
 
   <!-- 艺术背景及边框装饰 -->
   <div class="bg-texture" id="paper-bg"></div>
@@ -954,8 +1006,7 @@
         </div>
 
         <div class="welcome-rules">
-          阁下在此可随机抽取一款<span>素白瓷</span>器皿，<br>
-          抽得之后，便可在原瓷上自选墨宝与图样进行绘制，<br>
+          阁下在此可随机抽取一款<span>素白瓷</span>器皿，抽得之后，便可在原瓷上自选墨宝与图样进行绘制，<br>
           泥土与烈火的试炼，静待汝之神品诞生。
         </div>
 
@@ -1468,6 +1519,7 @@
       UI.inkBg.style.opacity = 1;
       UI.appFrame.style.borderColor = 'rgba(212, 177, 112, 0.2)'; // 框线调暗
       UI.mainApp.style.color = '#fff';
+      btnFullscreen.classList.add('dark-mode'); // 全屏按钮同步平滑切换为暗夜低调模式
 
       // C. 开启 Canvas 水墨粒子流光系统
       inkParticles.start();
@@ -1608,6 +1660,7 @@
       UI.inkBg.style.opacity = 0;
       UI.appFrame.style.borderColor = 'var(--color-gold)';
       UI.mainApp.style.color = 'var(--color-ink)';
+      btnFullscreen.classList.remove('dark-mode'); // 全屏按钮恢复为亮色宣纸金黄模式
 
       // 延迟重置抽奖中文字
       setTimeout(() => {
@@ -1636,6 +1689,67 @@
       }
       lastTouchEnd = now;
     }, false);
+
+    /* ==========================================
+       6. 浏览器全屏控制器 (Fullscreen Controller)
+       ========================================== */
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+
+    function toggleFullscreen() {
+      const doc = document.documentElement;
+      const isFullscreen = document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement;
+
+      if (!isFullscreen) {
+        if (doc.requestFullscreen) {
+          doc.requestFullscreen();
+        } else if (doc.webkitRequestFullscreen) {
+          doc.webkitRequestFullscreen();
+        } else if (doc.msRequestFullscreen) {
+          doc.msRequestFullscreen();
+        } else {
+          // 对不支持原生 HTML 全屏的手机设备（如 iOS Safari）进行优雅文化引导
+          alert("iOS 系统限制手机浏览器开启全屏。\n阁下可在 Safari 中点击下方‘分享’图标 -> 选择‘添加到主屏幕’，即可像原生应用般完美全屏结缘！");
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+
+    btnFullscreen.addEventListener('click', () => {
+      audio.init();
+      audio.playTap(1000);
+      toggleFullscreen();
+    });
+
+    // 监控全屏变化改变古风图标的角向
+    function onFullscreenChange() {
+      const isFullscreen = document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement;
+      const svg = document.getElementById('fullscreen-svg');
+      if (isFullscreen) {
+        // 向内收缩的四角回字图标
+        svg.innerHTML = '<path d="M8 4v4H4M16 4v4h4M8 20v-4H4M16 20v-4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+      } else {
+        // 向外延伸的四角全屏图标
+        svg.innerHTML = '<path d="M4 8V4h4M16 4h4v4M4 16v4h4M16 20h4v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+      }
+    }
+
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+    document.addEventListener('mozfullscreenchange', onFullscreenChange);
+    document.addEventListener('MSFullscreenChange', onFullscreenChange);
   </script>
 </body>
 
