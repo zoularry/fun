@@ -1,0 +1,18 @@
+{
+  "short_name": "瓷影丹青",
+  "name": "北京101中历史文化节·瓷影丹青雅集",
+  "description": "北京101中历史文化节瓷影丹青雅集单网页应用，支持完全离线使用。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fcfaf2",
+  "theme_color": "#1a3b32",
+  "icons": [
+    {
+      "src": "./ciqi.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

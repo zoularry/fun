@@ -1,0 +1,1540 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <title>北京101中历史文化节 · 瓷影丹青雅集</title>
+        <meta
+            name="description"
+            content="雨过天晴云破处，妙手丹青绘芳华。北京101中历史文化节瓷影丹青雅集程序。"
+        />
+        <link rel="manifest" href="manifest.json" />
+        <meta name="theme-color" content="#1a3b32" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+
+        <!-- 引入古风字体，并设置系统楷体、宋体作为优雅离线回退 -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@300;500;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            /* ==========================================
+       新中式古风设计系统 (Core CSS Tokens)
+       ========================================== */
+            :root {
+                --bg-color: #fcfaf2; /* 宣纸黄 */
+                --primary-color: #1a3b32; /* 黛绿色 */
+                --accent-color: #b22222; /* 朱红色 */
+                --gold-color: #d4af37; /* 皇家描金色 */
+                --text-color: #2b2b2b; /* 徽墨灰 */
+                --text-light: #555555; /* 浅墨灰 */
+                --border-color: rgba(26, 59, 50, 0.15);
+                --font-display:
+                    "Ma Shan Zheng", "STKaiti", "Kaiti", "Microsoft YaHei",
+                    serif;
+                --font-body:
+                    "ZCOOL XiaoWei", "Noto Serif SC", "STSong", "Songti SC",
+                    serif;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                -webkit-tap-highlight-color: transparent;
+                user-select: none;
+            }
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                font-family: var(--font-body);
+                overflow: hidden;
+                position: relative;
+            }
+
+            /* 宣纸底纹与古典水墨晕染背景 */
+            .app-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                background-color: var(--bg-color);
+                /* 利用CSS渐变模拟宣纸微弱纤维感与柔和四角水墨暗沉 */
+                background-image:
+                    radial-gradient(
+                        circle at 50% 50%,
+                        rgba(255, 255, 255, 0.4) 0%,
+                        rgba(240, 235, 220, 0.2) 70%,
+                        rgba(26, 59, 50, 0.05) 100%
+                    ),
+                    repeating-linear-gradient(
+                        45deg,
+                        rgba(40, 40, 40, 0.01) 0px,
+                        rgba(40, 40, 40, 0.01) 1px,
+                        transparent 1px,
+                        transparent 10px
+                    ),
+                    repeating-linear-gradient(
+                        -45deg,
+                        rgba(40, 40, 40, 0.01) 0px,
+                        rgba(40, 40, 40, 0.01) 1px,
+                        transparent 1px,
+                        transparent 10px
+                    );
+                pointer-events: none;
+            }
+
+            /* 古风精致红木双框与古典四角云纹 */
+            .app-frame {
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                border: 1px solid var(--border-color);
+                z-index: 2;
+                pointer-events: none;
+            }
+
+            .app-frame::after {
+                content: "";
+                position: absolute;
+                top: 4px;
+                left: 4px;
+                right: 4px;
+                bottom: 4px;
+                border: 2px solid var(--primary-color);
+                opacity: 0.7;
+            }
+
+            /* 四角云纹角标 */
+            .corner-decor {
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                border: 2px solid var(--accent-color);
+                z-index: 3;
+            }
+            .c-lt {
+                top: 12px;
+                left: 12px;
+                border-right: none;
+                border-bottom: none;
+            }
+            .c-rt {
+                top: 12px;
+                right: 12px;
+                border-left: none;
+                border-bottom: none;
+            }
+            .c-lb {
+                bottom: 12px;
+                left: 12px;
+                border-right: none;
+                border-top: none;
+            }
+            .c-rb {
+                bottom: 12px;
+                right: 12px;
+                border-left: none;
+                border-top: none;
+            }
+
+            /* ==========================================
+       音效与状态顶栏
+       ========================================== */
+            .app-header {
+                position: absolute;
+                top: 24px;
+                left: 24px;
+                right: 24px;
+                height: 48px;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                z-index: 10;
+            }
+
+            /* 古典全屏玉牌按钮 */
+            .fullscreen-btn {
+                width: 36px;
+                height: 36px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                outline: none;
+                margin-right: 12px;
+            }
+
+            .fullscreen-badge-icon {
+                width: 28px;
+                height: 28px;
+                border: 1.5px solid var(--gold-color);
+                border-radius: 4px;
+                position: relative;
+                box-shadow: 0 0 6px rgba(212, 175, 55, 0.2);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: radial-gradient(
+                    circle at 35% 35%,
+                    #fcfaf2 0%,
+                    #e8e3d3 100%
+                );
+            }
+
+            .fullscreen-badge-icon::before {
+                content: "";
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                border: 1px solid var(--accent-color);
+                border-radius: 2px;
+                opacity: 0.6;
+            }
+
+            .fullscreen-badge-icon::after {
+                content: "乾坤";
+                font-family: var(--font-display);
+                font-size: 0.55rem;
+                font-weight: bold;
+                color: var(--primary-color);
+                line-height: 1;
+            }
+
+            /* 旋转玉佩音乐开关 */
+            .music-btn {
+                width: 36px;
+                height: 36px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                outline: none;
+            }
+
+            .jade-pendant {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: 2.5px double var(--gold-color);
+                position: relative;
+                animation: jadeSpin 12s linear infinite paused;
+                box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+                background: radial-gradient(
+                    circle at 35% 35%,
+                    #fcfaf2 0%,
+                    #d4af37 100%
+                );
+            }
+
+            /* 玉佩中心的太极图 */
+            .jade-pendant::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 14px;
+                height: 14px;
+                background: var(--primary-color);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow: inset 0 7px 0 0 #fcfaf2;
+            }
+
+            .music-btn.playing .jade-pendant {
+                animation-play-state: running;
+            }
+
+            @keyframes jadeSpin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* ==========================================
+       页面容器通用样式
+       ========================================== */
+            .screen {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 5;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 32px;
+                opacity: 0;
+                visibility: hidden;
+                transition:
+                    opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+                    visibility 0.8s;
+            }
+
+            .screen.active {
+                opacity: 1;
+                visibility: visible;
+                z-index: 6;
+            }
+
+            /* ==========================================
+       1. 首页 (Screen Home)
+       ========================================== */
+            .screen-home {
+                justify-content: space-between;
+                padding: 80px 24px 70px 24px;
+            }
+
+            .home-header-group {
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            .home-sub-title {
+                font-size: 1.1rem;
+                letter-spacing: 0.35em;
+                color: var(--primary-color);
+                margin-bottom: 12px;
+                font-weight: 500;
+                position: relative;
+                display: inline-block;
+            }
+
+            .home-sub-title::before,
+            .home-sub-title::after {
+                content: "✦";
+                color: var(--accent-color);
+                font-size: 0.8rem;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .home-sub-title::before {
+                left: -20px;
+            }
+            .home-sub-title::after {
+                right: -25px;
+            }
+
+            .home-title {
+                font-family: var(--font-display);
+                font-size: 2.3rem;
+                line-height: 1.4;
+                color: var(--text-color);
+                font-weight: normal;
+                margin-top: 10px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+                writing-mode: vertical-rl; /* 竖排排版展现古典韵味 */
+                text-orientation: mixed;
+                height: 260px;
+                letter-spacing: 0.2em;
+                margin: 20px auto;
+            }
+
+            /* 首页中央大印章设计 */
+            .seal-container {
+                position: relative;
+                width: 140px;
+                height: 140px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 10px 0;
+            }
+
+            .seal-outer {
+                width: 110px;
+                height: 110px;
+                border: 3px double var(--accent-color);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                animation: pulseSeal 4s ease-in-out infinite alternate;
+            }
+
+            .seal-inner {
+                width: 96px;
+                height: 96px;
+                border: 1px dashed var(--accent-color);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--accent-color);
+                font-family: var(--font-display);
+                font-size: 1.4rem;
+                font-weight: bold;
+                line-height: 1.1;
+                text-align: center;
+                padding: 10px;
+                letter-spacing: 2px;
+                transform: rotate(-10deg);
+            }
+
+            @keyframes pulseSeal {
+                0% {
+                    transform: scale(0.98);
+                    opacity: 0.85;
+                }
+                100% {
+                    transform: scale(1.03);
+                    opacity: 1;
+                }
+            }
+
+            /* 酷炫古典开始按钮 */
+            .btn-container {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+            .btn-ink {
+                position: relative;
+                font-family: var(--font-display);
+                font-size: 1.5rem;
+                color: var(--bg-color);
+                background: var(--primary-color);
+                border: none;
+                padding: 14px 45px;
+                border-radius: 30px;
+                cursor: pointer;
+                overflow: hidden;
+                box-shadow:
+                    0 4px 15px rgba(26, 59, 50, 0.3),
+                    0 0 0 2px var(--gold-color);
+                transition: all 0.3s;
+                letter-spacing: 4px;
+                outline: none;
+            }
+
+            .btn-ink::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(212, 175, 55, 0.4),
+                    transparent
+                );
+                transition: 0.5s;
+            }
+
+            .btn-ink:active {
+                transform: scale(0.96);
+                box-shadow: 0 2px 8px rgba(26, 59, 50, 0.5);
+            }
+
+            .btn-ink:hover::before {
+                left: 100%;
+            }
+
+            .btn-sub-tip {
+                font-size: 0.8rem;
+                color: var(--text-light);
+                margin-top: 8px;
+                letter-spacing: 2px;
+                text-align: center;
+            }
+
+            /* ==========================================
+       2. 抽奖动画页 (Screen Lottery)
+       ========================================== */
+            .screen-lottery {
+                background: #0d1613; /* 深黛绿色作为水墨夜空 */
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #lotteryCanvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+            }
+
+            /* 抽奖时的神话玄妙谶语 */
+            .lottery-oracle {
+                position: absolute;
+                top: 25%;
+                font-family: var(--font-display);
+                font-size: 1.8rem;
+                color: var(--bg-color);
+                z-index: 2;
+                letter-spacing: 0.25em;
+                text-align: center;
+                opacity: 0.8;
+                animation: pulseOracle 2.5s ease-in-out infinite alternate;
+                text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+                writing-mode: vertical-rl;
+                height: 180px;
+            }
+
+            @keyframes pulseOracle {
+                0% {
+                    opacity: 0.4;
+                    transform: scale(0.95);
+                    filter: blur(0.5px);
+                }
+                100% {
+                    opacity: 0.9;
+                    transform: scale(1.02);
+                    filter: blur(0px);
+                }
+            }
+
+            /* ==========================================
+       3. 结果页 (Screen Result)
+       ========================================== */
+            .screen-result {
+                justify-content: space-between;
+                padding: 70px 24px 45px 24px;
+            }
+
+            .result-header {
+                font-family: var(--font-display);
+                font-size: 1.5rem;
+                color: var(--accent-color);
+                letter-spacing: 3px;
+                text-align: center;
+            }
+
+            /* 圆形博古画窗瓷器盒 */
+            .porcelain-container {
+                position: relative;
+                width: 290px;
+                height: 290px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 15px auto;
+            }
+
+            /* 多宝阁圆框描金 */
+            .porcelain-frame {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                border: 4px solid var(--primary-color);
+                border-radius: 50%;
+                box-shadow:
+                    0 8px 24px rgba(26, 59, 50, 0.25),
+                    inset 0 0 15px rgba(212, 175, 55, 0.4);
+                z-index: 2;
+                background: transparent;
+                pointer-events: none;
+            }
+
+            .porcelain-frame::before {
+                content: "";
+                position: absolute;
+                top: -6px;
+                left: -6px;
+                right: -6px;
+                bottom: -6px;
+                border: 1px solid var(--gold-color);
+                border-radius: 50%;
+                opacity: 0.8;
+                animation: rotateRing 15s linear infinite;
+            }
+
+            @keyframes rotateRing {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* 瓷器展示层：利用 background-position 从 ciqi.webp 精准切割四象限 */
+            .porcelain-image {
+                width: 260px;
+                height: 260px;
+                border-radius: 50%;
+                background-image: url("ciqi.webp");
+                background-size: 200% 200%;
+                background-repeat: no-repeat;
+                z-index: 1;
+                transform: scale(0.95);
+                animation: floatPorcelain 5s ease-in-out infinite alternate;
+                box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.15);
+                background-color: #fff;
+            }
+
+            @keyframes floatPorcelain {
+                0% {
+                    transform: scale(0.94) translateY(4px);
+                }
+                100% {
+                    transform: scale(0.98) translateY(-4px);
+                }
+            }
+
+            .porcelain-name {
+                font-family: var(--font-display);
+                font-size: 1.8rem;
+                color: var(--primary-color);
+                text-align: center;
+                margin-top: 8px;
+                letter-spacing: 2px;
+            }
+
+            /* 古风卷轴诗词台 */
+            .scroll-wrapper {
+                position: relative;
+                width: 100%;
+                max-width: 320px;
+                min-height: 150px;
+                margin: 15px auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            /* 左右卷轴轴柄 */
+            .scroll-rod {
+                position: absolute;
+                top: -5px;
+                width: 8px;
+                height: calc(100% + 10px);
+                background: linear-gradient(90deg, #5c2c16, #8b4513, #5c2c16);
+                border-radius: 4px;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+                z-index: 4;
+                transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            }
+
+            .scroll-rod::before,
+            .scroll-rod::after {
+                content: "";
+                position: absolute;
+                left: -2px;
+                width: 12px;
+                height: 8px;
+                background: var(--gold-color);
+                border-radius: 2px;
+            }
+            .scroll-rod::before {
+                top: -8px;
+            }
+            .scroll-rod::after {
+                bottom: -8px;
+            }
+
+            .rod-left {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .rod-right {
+                right: 50%;
+                transform: translateX(50%);
+            }
+
+            /* 展开后的卷轴面板 */
+            .scroll-body {
+                width: 0%;
+                height: 100%;
+                min-height: 130px;
+                background-color: #f7f3e8;
+                border-top: 2px solid #8b4513;
+                border-bottom: 2px solid #8b4513;
+                box-shadow: inset 0 0 10px rgba(139, 69, 19, 0.15);
+                z-index: 3;
+                overflow: hidden;
+                transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 12px;
+                position: relative;
+            }
+
+            /* 卷轴展开后状态 */
+            .scroll-wrapper.expanded .rod-left {
+                transform: translateX(-155px);
+            }
+
+            .scroll-wrapper.expanded .rod-right {
+                transform: translateX(155px);
+            }
+
+            .scroll-wrapper.expanded .scroll-body {
+                width: 300px;
+            }
+
+            /* 逐字落墨的古诗词文本 */
+            .poem-content {
+                font-family: var(--font-display);
+                font-size: 1.3rem;
+                color: var(--text-color);
+                text-align: center;
+                line-height: 1.8;
+                letter-spacing: 0.15em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+
+            .scroll-wrapper.expanded .poem-content {
+                opacity: 1;
+            }
+
+            .poem-line {
+                margin: 3px 0;
+                white-space: nowrap;
+            }
+
+            /* 诗词落款印章 */
+            .poem-seal {
+                width: auto;
+                border: 1px solid var(--accent-color);
+                color: var(--accent-color);
+                font-family: var(--font-display);
+                font-size: 0.65rem;
+                font-weight: bold;
+                line-height: 1.2;
+                text-align: center;
+                padding: 3px 6px;
+                margin-top: 8px;
+                transform: rotate(-2deg);
+                display: inline-block;
+                opacity: 0;
+                transition: opacity 1s ease 1.2s;
+            }
+
+            .scroll-wrapper.expanded .poem-seal {
+                opacity: 0.85;
+            }
+
+            /* 重新抽奖与绘画说明按钮组 */
+            .result-buttons {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                margin-top: 10px;
+            }
+
+            .btn-reset {
+                font-family: var(--font-display);
+                font-size: 1.3rem;
+                color: var(--bg-color);
+                background: var(--accent-color);
+                border: none;
+                padding: 10px 40px;
+                border-radius: 25px;
+                cursor: pointer;
+                box-shadow: 0 4px 10px rgba(178, 34, 34, 0.25);
+                letter-spacing: 3px;
+                transition: all 0.3s;
+                outline: none;
+            }
+
+            .btn-reset:active {
+                transform: scale(0.96);
+                box-shadow: 0 2px 5px rgba(178, 34, 34, 0.4);
+            }
+
+
+
+            /* ==========================================
+       移动端画布容器与安全适配
+       ========================================== */
+            .phone-container {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                max-width: 480px; /* 完美手机屏幕比 */
+                margin: 0 auto;
+                background: transparent;
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+                z-index: 5;
+            }
+
+            @media (min-width: 481px) {
+                body {
+                    background-color: #333333; /* 桌面端居中容器背景 */
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .phone-container {
+                    height: 100%;
+                    max-height: 900px;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    border: 4px solid var(--primary-color);
+                    background-color: var(--bg-color);
+                }
+                .app-background {
+                    border-radius: 8px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="phone-container">
+            <!-- 纸纹水墨底图 -->
+            <div class="app-background"></div>
+
+            <!-- 古典内框与四角云纹 -->
+            <div class="app-frame"></div>
+            <div class="corner-decor c-lt"></div>
+            <div class="corner-decor c-rt"></div>
+            <div class="corner-decor c-lb"></div>
+            <div class="corner-decor c-rb"></div>
+
+            <!-- 顶栏状态与控制 -->
+            <header class="app-header">
+                <!-- 古典乾坤全屏控制器 -->
+                <button
+                    id="fullscreenToggle"
+                    class="fullscreen-btn"
+                    aria-label="开启或关闭全屏"
+                >
+                    <div class="fullscreen-badge-icon"></div>
+                </button>
+
+                <!-- 旋转玉佩音乐控制器 -->
+                <button
+                    id="musicToggle"
+                    class="music-btn"
+                    aria-label="古风背景音乐开关"
+                >
+                    <div class="jade-pendant"></div>
+                </button>
+            </header>
+
+            <!-- 1. 首页 -->
+            <section id="screenHome" class="screen screen-home active">
+                <div class="home-header-group">
+                    <div class="home-sub-title">北京一零一中历史文化节</div>
+                    <h1 class="home-title">瓷影丹青<br />雅集机缘</h1>
+                </div>
+
+                <!-- 中央朱砂印章 -->
+                <div class="seal-container">
+                    <div class="seal-outer">
+                        <div class="seal-inner">妙手<br />丹青</div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <div style="text-align: center">
+                        <button id="btnStart" class="btn-ink">开启机缘</button>
+                        <p class="btn-sub-tip">点击磬鸣，开启您的瓷器雅缘</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. 抽奖动画屏 -->
+            <section id="screenLottery" class="screen screen-lottery">
+                <canvas id="lotteryCanvas"></canvas>
+                <div id="lotteryOracle" class="lottery-oracle">
+                    乾坤运转造化凝
+                </div>
+            </section>
+
+            <!-- 3. 结果屏 -->
+            <section id="screenResult" class="screen screen-result">
+                <h2 class="result-header">✦ 抽奖结果 ✦</h2>
+
+                <!-- 圆形如意多宝阁 -->
+                <div>
+                    <div class="porcelain-container">
+                        <div class="porcelain-frame"></div>
+                        <div id="porcelainImg" class="porcelain-image"></div>
+                    </div>
+                    <h3 id="porcelainName" class="porcelain-name">
+                        瓷器加载中...
+                    </h3>
+                </div>
+
+                <!-- 优雅拉开的古风卷轴 -->
+                <div id="scrollWrapper" class="scroll-wrapper">
+                    <div class="scroll-rod rod-left"></div>
+                    <div class="scroll-body">
+                        <div class="poem-content" id="poemContent">
+                            <!-- 动态生成诗词行 -->
+                        </div>
+                    </div>
+                    <div class="scroll-rod rod-right"></div>
+                </div>
+
+                <!-- 操作面板 -->
+                <div class="result-buttons">
+                    <button id="btnReset" class="btn-reset">再结雅缘</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================================
+       核心JS：音效合成、Canvas动画与界面逻辑
+       ========================================== -->
+        <script>
+            /* ==========================================
+       PWA Service Worker 注册逻辑
+       ========================================== */
+            window.addEventListener("load", () => {
+                if ("serviceWorker" in navigator) {
+                    navigator.serviceWorker
+                        .register("./sw.js")
+                        .then((reg) => {
+                            console.log(
+                                "Service Worker 注册成功！范围:",
+                                reg.scope,
+                            );
+                        })
+                        .catch((err) => {
+                            console.warn("Service Worker 注册失败:", err);
+                        });
+                }
+            });
+
+            /* ==========================================
+       数据配置：瓷器与古典诗词
+       ========================================== */
+            const PORCELAINS = [
+                {
+                    name: "雨过天晴 青花瓷",
+                    bgPos: "0% 0%", // 左上
+                    poem: ["雨过天晴云破处", "这般颜色做将来"],
+                    author: "宋·赵佶",
+                    seal: "青花",
+                },
+                {
+                    name: "红药绽芳 粉彩瓷",
+                    bgPos: "100% 0%", // 右上
+                    poem: ["只恐风吹乌帽折", "且看红药绽芳菲"],
+                    author: "宋·苏轼",
+                    seal: "粉彩",
+                },
+                {
+                    name: "返璞归真 单色釉",
+                    bgPos: "0% 100%", // 左下
+                    poem: ["大器晚成无雕琢", "返璞归真显性灵"],
+                    author: "庄子·心学",
+                    seal: "单色",
+                },
+                {
+                    name: "画堂捧珠 珐琅彩",
+                    bgPos: "100% 103%", // 右下
+                    poem: ["彩笔新开五色图", "画堂深处捧明珠"],
+                    author: "唐·李白",
+                    seal: "珐琅",
+                },
+            ];
+
+            const ORACLES = [
+                "乾坤运转造化凝",
+                "妙手丹青绘芳华",
+                "百载一零凝神秀",
+                "巧夺天工雅缘结",
+            ];
+
+            /* ==========================================
+       Web Audio API 声音引擎（古风五声音乐与磬声）
+       ========================================== */
+            class AntiqueSoundEngine {
+                constructor() {
+                    this.ctx = null;
+                    this.bgmTimer = null;
+                    this.isPlaying = false;
+                    this.masterGain = null;
+
+                    // 宫商角徵羽五声音阶 (基于C调)
+                    // C4, D4, E4, G4, A4, C5, D5, E5, G5, A5
+                    this.pentatonic = [
+                        261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33,
+                        659.25, 783.99, 880.0,
+                    ];
+                }
+
+                init() {
+                    if (this.ctx) return;
+
+                    // 兼容性创建 AudioContext
+                    const AudioContextClass =
+                        window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContextClass();
+
+                    // 主音量调节与低通滤波器（使整体声音温暖，模拟竹木青铜余音）
+                    this.masterGain = this.ctx.createGain();
+                    this.masterGain.gain.value = 0.55;
+
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = "lowpass";
+                    filter.frequency.value = 800; // 过滤高频杂音，增加禅意
+
+                    this.masterGain.connect(filter);
+                    filter.connect(this.ctx.destination);
+                }
+
+                // 磬声 (清脆、金属感、悠长衰减)
+                playChime(frequency = 880, decay = 2.5) {
+                    this.init();
+                    if (this.ctx.state === "suspended") {
+                        this.ctx.resume();
+                    }
+
+                    const now = this.ctx.currentTime;
+
+                    // 1. 基频振荡器 (Sine波模拟纯净铜磬)
+                    const osc1 = this.ctx.createOscillator();
+                    const gain1 = this.ctx.createGain();
+                    osc1.type = "sine";
+                    osc1.frequency.setValueAtTime(frequency, now);
+
+                    // 2. 高频泛音 (模拟磬被敲击那一瞬间的清脆金属谐波)
+                    const osc2 = this.ctx.createOscillator();
+                    const gain2 = this.ctx.createGain();
+                    osc2.type = "sine";
+                    osc2.frequency.setValueAtTime(frequency * 2.02, now); // 微弱失调增加真实感
+
+                    const osc3 = this.ctx.createOscillator();
+                    const gain3 = this.ctx.createGain();
+                    osc3.type = "sine";
+                    osc3.frequency.setValueAtTime(frequency * 3.05, now);
+
+                    // 音量包络衰减
+                    gain1.gain.setValueAtTime(0.4, now);
+                    gain1.gain.exponentialRampToValueAtTime(
+                        0.0001,
+                        now + decay,
+                    );
+
+                    gain2.gain.setValueAtTime(0.15, now);
+                    gain2.gain.exponentialRampToValueAtTime(
+                        0.0001,
+                        now + decay * 0.4,
+                    ); // 泛音衰减更快
+
+                    gain3.gain.setValueAtTime(0.08, now);
+                    gain3.gain.exponentialRampToValueAtTime(
+                        0.0001,
+                        now + decay * 0.2,
+                    );
+
+                    // 连接
+                    osc1.connect(gain1);
+                    osc2.connect(gain2);
+                    osc3.connect(gain3);
+
+                    gain1.connect(this.masterGain);
+                    gain2.connect(this.masterGain);
+                    gain3.connect(this.masterGain);
+
+                    osc1.start(now);
+                    osc2.start(now);
+                    osc3.start(now);
+
+                    osc1.stop(now + decay);
+                    osc2.stop(now + decay);
+                    osc3.stop(now + decay);
+                }
+
+                // 磬重击 (晨钟暮鼓般的低沉共鸣音效)
+                playDeepChime() {
+                    this.playChime(220, 4.0); // 较低基频，衰减长达4秒
+                    setTimeout(() => this.playChime(440, 2.5), 150); // 伴随泛音跟进
+                }
+
+                // 古筝空灵单音发生器 (Triangle波，柔和微带共鸣)
+                playPluck(frequency, delay = 0) {
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime + delay;
+
+                    const osc = this.ctx.createOscillator();
+                    const gainNode = this.ctx.createGain();
+
+                    osc.type = "triangle"; // 三角波非常适合模拟古筝/木鱼
+                    osc.frequency.setValueAtTime(frequency, now);
+
+                    // 模拟古筝拨弦音包络
+                    gainNode.gain.setValueAtTime(0.0, now);
+                    gainNode.gain.linearRampToValueAtTime(0.25, now + 0.03); // 迅速起音
+                    gainNode.gain.exponentialRampToValueAtTime(
+                        0.0001,
+                        now + 2.8,
+                    ); // 缓慢衰减
+
+                    osc.connect(gainNode);
+                    gainNode.connect(this.masterGain);
+
+                    osc.start(now);
+                    osc.stop(now + 3.0);
+                }
+
+                // 开始循环背景禅意旋律
+                startBGM() {
+                    this.init();
+                    if (this.ctx.state === "suspended") {
+                        this.ctx.resume();
+                    }
+
+                    this.isPlaying = true;
+
+                    // 自动演奏音序器：每1.6秒演奏一组中国古典和弦或单音
+                    const playTick = () => {
+                        if (!this.isPlaying) return;
+
+                        // 随机决策：单音、和弦、或者休止
+                        const mode = Math.random();
+                        if (mode < 0.6) {
+                            // 播放单音
+                            const pitch =
+                                this.pentatonic[
+                                    Math.floor(
+                                        Math.random() * this.pentatonic.length,
+                                    )
+                                ];
+                            this.playPluck(pitch);
+                        } else if (mode < 0.85) {
+                            // 播放和谐的五声对音 (如主音与纯五度)
+                            const baseIdx = Math.floor(
+                                Math.random() * (this.pentatonic.length - 4),
+                            );
+                            this.playPluck(this.pentatonic[baseIdx]);
+                            // 稍许延迟，模拟古筝的“历音”或双手拨弦
+                            this.playPluck(this.pentatonic[baseIdx + 3], 0.15);
+                        } else {
+                            // 静默一拍，体现“大音希声”的留白意境
+                        }
+
+                        // 下一次音符时间
+                        this.bgmTimer = setTimeout(
+                            playTick,
+                            1400 + Math.random() * 800,
+                        );
+                    };
+
+                    playTick();
+                }
+
+                stopBGM() {
+                    this.isPlaying = false;
+                    if (this.bgmTimer) {
+                        clearTimeout(this.bgmTimer);
+                        this.bgmTimer = null;
+                    }
+                }
+            }
+
+            const sound = new AntiqueSoundEngine();
+
+            // 全屏开关逻辑
+            const fullscreenBtn = document.getElementById("fullscreenToggle");
+            fullscreenBtn.addEventListener("click", () => {
+                const doc = document.documentElement;
+                const container = document.querySelector(".phone-container");
+                const target = container || doc;
+
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    if (target.requestFullscreen) {
+                        target.requestFullscreen();
+                    } else if (target.webkitRequestFullscreen) {
+                        target.webkitRequestFullscreen();
+                    }
+                    sound.playChime(783.99, 1.2); // G5 磬音
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                    sound.playChime(523.25, 1.0); // C5 磬音
+                }
+            });
+
+            // 音乐开关事件
+            const musicBtn = document.getElementById("musicToggle");
+            musicBtn.addEventListener("click", () => {
+                if (musicBtn.classList.contains("playing")) {
+                    musicBtn.classList.remove("playing");
+                    sound.stopBGM();
+                } else {
+                    musicBtn.classList.add("playing");
+                    sound.startBGM();
+                    // 触发一次清脆的声音以提示开启
+                    sound.playChime(660, 1.5);
+                }
+            });
+
+            /* ==========================================
+       Canvas水墨粒子与金色太极抽奖动画
+       ========================================== */
+            const canvas = document.getElementById("lotteryCanvas");
+            const ctx = canvas.getContext("2d");
+            let animationFrameId = null;
+
+            // 粒子类定义
+            class InkDrop {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = 2 + Math.random() * 5;
+                    this.maxRadius = 35 + Math.random() * 45;
+                    this.alpha = 0.5 + Math.random() * 0.3;
+                    this.scaleSpeed = 0.4 + Math.random() * 0.4;
+                    this.vx = (Math.random() - 0.5) * 0.4;
+                    this.vy = (Math.random() - 0.5) * 0.4;
+                }
+                update() {
+                    this.radius += this.scaleSpeed;
+                    this.alpha -= 0.0035;
+                    this.x += this.vx;
+                    this.y += this.vy;
+                }
+                draw(c) {
+                    if (this.alpha <= 0) return;
+                    c.save();
+                    // 径向渐变模拟毛笔落纸水墨边缘向外淡化扩散
+                    const grad = c.createRadialGradient(
+                        this.x,
+                        this.y,
+                        this.radius * 0.1,
+                        this.x,
+                        this.y,
+                        this.radius,
+                    );
+                    grad.addColorStop(0, `rgba(20, 26, 23, ${this.alpha})`);
+                    grad.addColorStop(
+                        0.3,
+                        `rgba(26, 40, 34, ${this.alpha * 0.8})`,
+                    );
+                    grad.addColorStop(
+                        0.7,
+                        `rgba(40, 48, 44, ${this.alpha * 0.3})`,
+                    );
+                    grad.addColorStop(1, "rgba(40, 48, 44, 0)");
+                    c.fillStyle = grad;
+                    c.beginPath();
+                    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    c.fill();
+                    c.restore();
+                }
+            }
+
+            class GoldDust {
+                constructor(w, h) {
+                    // 从外圈螺旋散布
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance =
+                        Math.max(w, h) * (0.6 + Math.random() * 0.4);
+                    this.x = w / 2 + Math.cos(angle) * distance;
+                    this.y = h / 2 + Math.sin(angle) * distance;
+                    this.targetX = w / 2;
+                    this.targetY = h / 2;
+
+                    this.size = 1.2 + Math.random() * 2.2;
+                    this.color = `rgba(212, 175, 55, ${0.7 + Math.random() * 0.3})`;
+                    this.angle = angle;
+                    this.speed = 3.5 + Math.random() * 4.5;
+                    this.rotSpeed = 0.03 + Math.random() * 0.04;
+                    this.distFactor = distance;
+                }
+                update() {
+                    // 向中心螺旋式收紧
+                    this.distFactor -= this.speed;
+                    if (this.distFactor < 2) this.distFactor = 2;
+
+                    this.angle += this.rotSpeed;
+                    this.x =
+                        this.targetX + Math.cos(this.angle) * this.distFactor;
+                    this.y =
+                        this.targetY + Math.sin(this.angle) * this.distFactor;
+                }
+                draw(c) {
+                    c.save();
+                    c.beginPath();
+                    c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    c.fillStyle = this.color;
+                    c.shadowColor = "rgba(212, 175, 55, 0.9)";
+                    c.shadowBlur = 8;
+                    c.fill();
+                    c.restore();
+                }
+            }
+
+            let inkDrops = [];
+            let goldDusts = [];
+            let animStartTime = 0;
+            let animDuration = 3200; // 3.2秒酷炫动画
+            let centralTaijiRotation = 0;
+
+            function initCanvas() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+
+            function runLotteryAnimation(onComplete) {
+                initCanvas();
+                inkDrops = [];
+                goldDusts = [];
+                animStartTime = performance.now();
+                centralTaijiRotation = 0;
+
+                const w = canvas.width;
+                const h = canvas.height;
+
+                // 在中央和分散点初始化泼墨背景
+                for (let i = 0; i < 15; i++) {
+                    inkDrops.push(
+                        new InkDrop(
+                            w / 2 + (Math.random() - 0.5) * 80,
+                            h / 2 + (Math.random() - 0.5) * 80,
+                        ),
+                    );
+                }
+
+                // 初始化金色收拢星尘
+                for (let i = 0; i < 180; i++) {
+                    goldDusts.push(new GoldDust(w, h));
+                }
+
+                function drawFrame(now) {
+                    const elapsed = now - animStartTime;
+                    const progress = elapsed / animDuration;
+
+                    // 用一层微透明的水墨灰复写Canvas，形成残影/拖尾效果
+                    ctx.fillStyle = "rgba(13, 22, 19, 0.12)";
+                    ctx.fillRect(0, 0, w, h);
+
+                    // 1. 绘制并更新墨滴扩散 (水墨留白底色)
+                    inkDrops.forEach((drop) => {
+                        drop.update();
+                        drop.draw(ctx);
+                    });
+
+                    // 持续随机添加微弱小墨滴
+                    if (Math.random() < 0.15 && progress < 0.7) {
+                        inkDrops.push(
+                            new InkDrop(Math.random() * w, Math.random() * h),
+                        );
+                    }
+
+                    // 2. 绘制金色粒子螺旋汇聚
+                    goldDusts.forEach((dust) => {
+                        dust.update();
+                        dust.draw(ctx);
+                    });
+
+                    // 3. 动画后半段：在中心凝聚并爆发金描太极图
+                    if (progress > 0.45) {
+                        const taijiAlpha = Math.min((progress - 0.45) * 3, 0.9);
+                        centralTaijiRotation += 0.05 * (1 + progress * 2.0); // 越来越快
+
+                        ctx.save();
+                        ctx.translate(w / 2, h / 2);
+                        ctx.rotate(centralTaijiRotation);
+                        ctx.scale(
+                            1.2 - (1 - progress) * 0.3,
+                            1.2 - (1 - progress) * 0.3,
+                        ); // 膨胀绽放
+
+                        // 绘制金色半透明太极双鱼
+                        ctx.shadowBlur = 20;
+                        ctx.shadowColor = "rgba(212, 175, 55, 0.8)";
+                        ctx.globalAlpha = taijiAlpha;
+
+                        // 绘制外描金环
+                        ctx.strokeStyle = "rgba(212, 175, 55, 0.7)";
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 52, 0, Math.PI * 2);
+                        ctx.stroke();
+
+                        // 1. 先绘制一尊完整的深黛绿色大圆（阴鱼打底，避免图形拼接缝隙白边）
+                        ctx.fillStyle = "rgba(26, 59, 50, 0.95)";
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 50, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // 2. 绘制金色阳鱼（S线精确曲线：右侧大半圆 + 下部小圆向左凹 + 上部小圆向右凸）
+                        ctx.fillStyle = "rgba(212, 175, 55, 0.9)";
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 50, -Math.PI / 2, Math.PI / 2, false); // 大半圆 (顺时针)
+                        ctx.arc(0, 25, 25, Math.PI / 2, -Math.PI / 2, false); // 下部小半圆凹进 (顺时针)
+                        ctx.arc(0, -25, 25, Math.PI / 2, -Math.PI / 2, true); // 上部小半圆凸出 (逆时针)
+                        ctx.closePath();
+                        ctx.fill();
+
+                        // 3. 绘制阴阳双眼（阴中有阳，阳中有阴）
+                        // 阳鱼（金色，上部）里的阴眼点（深色）
+                        ctx.fillStyle = "rgba(26, 59, 50, 0.95)";
+                        ctx.beginPath();
+                        ctx.arc(0, -25, 6, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // 阴鱼（深色，下部）里的阳眼点（金色）
+                        ctx.fillStyle = "rgba(212, 175, 55, 0.9)";
+                        ctx.beginPath();
+                        ctx.arc(0, 25, 6, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.restore();
+                    }
+
+                    // 4. 随机切换谶语，保持神秘和动感
+                    if (Math.floor(elapsed / 800) % 4 === 0) {
+                        const oracleDiv =
+                            document.getElementById("lotteryOracle");
+                        if (oracleDiv && Math.random() < 0.05) {
+                            oracleDiv.textContent =
+                                ORACLES[
+                                    Math.floor(Math.random() * ORACLES.length)
+                                ];
+                        }
+                    }
+
+                    if (progress < 1) {
+                        animationFrameId = requestAnimationFrame(drawFrame);
+                    } else {
+                        // 动画完美结束，触发大磬音效并跳转
+                        cancelAnimationFrame(animationFrameId);
+                        onComplete();
+                    }
+                }
+
+                animationFrameId = requestAnimationFrame(drawFrame);
+            }
+
+            /* ==========================================
+       界面切换与抽奖交互主控逻辑
+       ========================================== */
+            const screenHome = document.getElementById("screenHome");
+            const screenLottery = document.getElementById("screenLottery");
+            const screenResult = document.getElementById("screenResult");
+
+            const btnStart = document.getElementById("btnStart");
+            const btnReset = document.getElementById("btnReset");
+
+            const porcelainImg = document.getElementById("porcelainImg");
+            const porcelainName = document.getElementById("porcelainName");
+            const scrollWrapper = document.getElementById("scrollWrapper");
+            const poemContent = document.getElementById("poemContent");
+
+            // 切换屏幕实用函数
+            function navigateTo(targetScreen) {
+                document
+                    .querySelectorAll(".screen")
+                    .forEach((scr) => scr.classList.remove("active"));
+                targetScreen.classList.add("active");
+            }
+
+            // “开启机缘”点击响应
+            btnStart.addEventListener("click", () => {
+                // 开启音频环境
+                sound.init();
+                // 敲响磬声，宣告仪轨开始
+                sound.playChime(523.25, 2.5); // C5高亮清磬
+
+                // 延时切换，让声音起音更干净
+                setTimeout(() => {
+                    navigateTo(screenLottery);
+
+                    // 运行 Canvas 酷炫动画
+                    runLotteryAnimation(() => {
+                        // 动画结束后决定抽奖结果
+                        const index = Math.floor(
+                            Math.random() * PORCELAINS.length,
+                        );
+                        const result = PORCELAINS[index];
+
+                        // 展现大钟沉稳磬鸣
+                        sound.playDeepChime();
+
+                        // 配置结果数据
+                        porcelainImg.style.backgroundPosition = result.bgPos;
+                        porcelainName.textContent = result.name;
+
+                        // 填充卷轴里的古诗
+                        poemContent.innerHTML = "";
+                        result.poem.forEach((line) => {
+                            const lineDiv = document.createElement("div");
+                            lineDiv.className = "poem-line";
+                            lineDiv.textContent = line;
+                            poemContent.appendChild(lineDiv);
+                        });
+
+                        // 添加落款印章
+                        const sealSpan = document.createElement("span");
+                        sealSpan.className = "poem-seal";
+                        sealSpan.innerHTML =
+                            result.author + "<br>[" + result.seal + "]";
+                        poemContent.appendChild(sealSpan);
+
+                        // 跳转结果页
+                        navigateTo(screenResult);
+
+                        // 卷轴平滑拉开
+                        setTimeout(() => {
+                            scrollWrapper.classList.add("expanded");
+                        }, 400);
+                    });
+                }, 250);
+            });
+
+            // “再结雅缘”重新抽奖响应
+            btnReset.addEventListener("click", () => {
+                // 播放清脆短磬声
+                sound.playChime(659.25, 1.2); // E5磬音
+
+                // 收回卷轴
+                scrollWrapper.classList.remove("expanded");
+
+                // 平滑切回首页
+                setTimeout(() => {
+                    navigateTo(screenHome);
+                }, 500);
+            });
+        </script>
+    </body>
+</html>
